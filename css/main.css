@@ -1,7 +1,7 @@
 @import url("reset.css")
 /* https://developer.mozilla.org/en-US/docs/Web/CSS/@import */
 
-/* Center anything: */
+/* center anything: */
 /* https://stackoverflow.com/questions/6464592/how-to-align-entire-html-body-to-the-center */
 .centered-wrapper {
   position: relative;
@@ -42,6 +42,27 @@ Add class dropdown-content to submenu element. */
   display: block;
 }
 /* end on hover show menu items */
+/* social share */
+aside {
+    display: block;
+}
+.gnusocial {
+  padding: 0px;
+}
+.reddit {
+  padding: 0px;
+}
+.twitter {
+  padding: 0px;
+}
+.googleplus {
+  padding: 0px;
+}
+.facebook {
+  padding: 0px;
+}
+
+/* end social share */
 
 body {
   margin: 30px auto;
@@ -101,7 +122,7 @@ ul.posts li {
   list-style: none;
 }
 
-/* Code higlighting */
+/* code higlighting */
 .highlighter-rouge {
   font-size: 1.1em;
 }
@@ -115,3 +136,4 @@ ul.posts li {
   font-size: 1.1em;
   opacity: 0.6;
 }
+/* end code higlighting */
