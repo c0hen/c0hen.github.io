@@ -1,6 +1,5 @@
 description: Journal of my tinkering.
 name: C0hen
-baseurl: https://c0hen.github.com
 encoding: utf-8
 exclude: [LICENSE]
 markdown: kramdown
