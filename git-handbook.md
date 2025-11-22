@@ -306,3 +306,19 @@ $git push secondary
 ```
 For further git configuration to allow remote checking via external transport etc, see man git-config.
 
+### git environment variables and debugging
+
+There are environment variables (traces) that help debug aspects of git.
+The possible values of these variables are as follows:
+
++"true", "1", or "2" – the trace category is written to stderr.
+
++An absolute path starting with / – the trace output will be written to that file.
+
+```sh
+GIT_TRACE=/tmp/git_trace.txt
+GIT_CURL_VERBOSE=1
+```
+```sh
+GIT_MERGE_VERBOSITY=5
+```
