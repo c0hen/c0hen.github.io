@@ -2,7 +2,7 @@
 layout: default
 title: Puppet
 description: Useful for a puppet cluster
-tags: puppet modules coding
+tags: puppet modules devops coding
 ---
 
 ## Best practices

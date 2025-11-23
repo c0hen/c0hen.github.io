@@ -85,6 +85,13 @@ d /\\[SPAM\\]
 + vipe: insert a text editor into a pipe
 + zrun: automatically uncompress arguments to command
 
+#### data structure or configuration processing tools
+
++ jq
++ yq
++ tomlq
++ rq (see: open policy agent, Rego, kube-mgmt)
+
 #### ncdu equivalent
 
 For when [ncdu](https://dev.yorhel.nl/ncdu) is not installed.
