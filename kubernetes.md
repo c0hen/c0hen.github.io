@@ -50,6 +50,17 @@ kubectl api-versions
 
 KYAML aims to be a safer and less ambiguous YAML subset compatible with existing tooling (alpha available since kubernetes 1.34).
 
+### More ergonomic environment
+
+#### [autocomplete](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#enable-shell-autocompletion) for kubectl (bash)
+
+```sh
+source <(kubectl completion bash)
+alias k=kubectl
+complete -o default -F __start_kubectl k
+```
+#### kubectl [convert](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-convert-plugin) plugin
+
 ### Namespaces
 
 Namespaces help different projects, teams, or customers to share a Kubernetes cluster by providing:
@@ -67,10 +78,42 @@ kubectl config set-context prod --namespace=production \
 
 kubectl config view
 ```
+
+namespace-dev.yaml
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: development
+  labels:
+    name: development
+```
+namespace-prod.yaml
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: production
+  labels:
+    name: production
+```
+
 ```sh
 kubectl config use-context dev
 kubectl config current-context
 ```
+
+Show help for a subcommand:
+```sh
+kubectl config --help
+```
+
+```sh
+kubectl apply -f namespace-dev.yaml
+```
+
+[kubectx](https://github.com/ahmetb/kubectx) - switch contexts (clusters) faster
+kubens - switch namespaces faster
 
 ### [Labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
 
@@ -96,3 +139,4 @@ The relevant controller sees the deletionTimestamp and attempts to satisfy the r
 
 [Cloud Native Computing Foundation landscape](https://landscape.cncf.io/)
 [Helm](https://helm.sh/docs/chart_best_practices/conventions) installs charts (packages) into Kubernetes, creating a new release for each installation. To find new charts, you can search Helm chart repositories.
+[kind](https://kind.sigs.k8s.io/) - for testing local Kubernetes clusters using Docker container 'nodes'.
