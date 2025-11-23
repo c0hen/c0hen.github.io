@@ -14,6 +14,7 @@ tags: kubernetes devops coding
 + HPA - Horizontal Pod Autoscaler (activate in a deployment)
 + Policies - [OPA Gatekeeper](https://github.com/open-policy-agent/gatekeeper), [Kubewarden](https://www.kubewarden.io/)
 + kubelet - agent running on each worker node
++ manifest files - describe the desired state in terms of Kubernetes API objects.
 + cilium CNI uses eBPF directly, allowing for API aware network policies at layer 7. It also has transparent wireguard traffic encryption.
 
 ### Kubernetes workloads
@@ -41,6 +42,14 @@ tags: kubernetes devops coding
 
 ## [Objects in Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/)
 
+For the apiVersion: key in manifests, print the supported API versions on the server:
+
+```sh
+kubectl api-versions
+```
+
+KYAML aims to be a safer and less ambiguous YAML subset compatible with existing tooling (alpha available since kubernetes 1.34).
+
 ### Namespaces
 
 Namespaces help different projects, teams, or customers to share a Kubernetes cluster by providing:
@@ -67,3 +76,23 @@ kubectl config current-context
 
 Labels are key-value pairs that help filtering (API). They are intended to be used to specify identifying attributes relevant to users.
 Annotations (key-value pairs) have no validation and are meant for notes, nonidentifying metadata.
+
+### Finalizers
+
+[Finalizers](https://kubernetes.io/docs/concepts/overview/working-with-objects/finalizers/) are namespaced keys that tell Kubernetes to wait until specific conditions are met before it fully deletes resources that are marked for deletion. Finalizers can [get in the way](https://kubernetes.io/blog/2021/05/14/using-finalizers-to-control-deletion/) of deleting resources in Kubernetes, especially when there are parent-child relationships between objects.
+When you create a resource using a manifest file, you can specify finalizers in the
+```sh
+metadata.finalizers
+```
+field. When you attempt to delete the resource, the API server handling the delete request notices the values and does the following:
+
++ Modifies the object to add a metadata.deletionTimestamp field with the time you started the deletion.
++ Prevents the object from being removed until all items are removed from its metadata.finalizers field
++ Returns a 202 status code (HTTP "Accepted")
+
+The relevant controller sees the deletionTimestamp and attempts to satisfy the requirement. On success the controller removes that key from the finalizers field. When the finalizers field is emptied, an object with a deletionTimestamp field set is automatically deleted.
+
+## Kubernetes related projects
+
+[Cloud Native Computing Foundation landscape](https://landscape.cncf.io/)
+[Helm](https://helm.sh/docs/chart_best_practices/conventions) installs charts (packages) into Kubernetes, creating a new release for each installation. To find new charts, you can search Helm chart repositories.
