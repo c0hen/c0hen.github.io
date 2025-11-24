@@ -61,6 +61,8 @@ complete -o default -F __start_kubectl k
 ```
 #### kubectl [convert](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-convert-plugin) plugin
 
+Convert manifests between different API versions.
+
 ### Namespaces
 
 Namespaces help different projects, teams, or customers to share a Kubernetes cluster by providing:
@@ -107,6 +109,7 @@ Show help for a subcommand:
 ```sh
 kubectl config --help
 ```
+Apply manifest:
 
 ```sh
 kubectl apply -f namespace-dev.yaml
@@ -147,3 +150,20 @@ cat ~/.kube/config
 kubectx
 kind delete cluster
 ```
+#### [Kubernetes dashboard](https://github.com/kubernetes/dashboard)
+
++ deploy containerized applications to a Kubernetes cluster
++ troubleshoot your containerized application
++ manage the cluster resources
++ get an overview of applications running on your cluster
++ creating or modifying individual Kubernetes resources (such as Deployments, Jobs, DaemonSets, etc)
+
+#### [minikube](https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2Fstable%2Fdebian+package) local Kubernetes for learning and development
+
+```sh
+minikube start
+minikube pause # pause minikube without affecting deployed applications
+minikube stop
+minikube dashboard
+```
+
