@@ -5,6 +5,9 @@ description: Useful for using Kubernetes
 tags: kubernetes devops coding
 ---
 
+* Table of contents
+{:toc}
+
 ## Kubernetes components and terms
 
 + CRD - Custom Resource Definition
@@ -162,8 +165,73 @@ kind delete cluster
 
 ```sh
 minikube start
+```
+Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+```sh
 minikube pause # pause minikube without affecting deployed applications
 minikube stop
-minikube dashboard
+minikube dashboard # opens the local url in your browser when ready
 ```
 
+#### [chainguard](https://images.chainguard.dev/)
+
+Aims to minimize vulnerabilities by providing container images. Latest versions are free.
+
+#### [checkov](https://www.checkov.io/7.Scan%20Examples/Kubernetes.html)
+
+Evaluation of policies on your Kubernetes files, manifest scanning.
+
+#### [jaeger](https://www.jaegertracing.io/docs/) flexible distributed tracing platform
+
+Deployable as a single binary that can be configured to perform different roles within the Jaeger architecture.
+
+#### [linkerd](https://linkerd.io/2.19/features/)
+
+## Security
+
+### some checks to keep in mind
+
++ What's running in the container
+    + Your Code (Static Analysis)
+    + Other peoples code (Dependency Scanning)
+    + What's in the image (Image Scanning)
+    + Can you scan it while it's running (DAST/RASP/IAST)
++ How is that container going to run
+    + Manifest Scanning
+    + Admission Control
+    + Both of these to check for things like:
+    + does it run in a privileged way
+    + Is it going to run in the right namespace
+    + does it have right guard rails quota/pdb/memory requests
++ How are things going to communicate
+    + Network Policies (CNI Provider)
+    + Authorization (IdP)
+    + Encryption (Service Mesh?)
+    + Can you protect it at the edge (Web Application Firewall)
++ How does your cluster operate
+    + Who has access (RBAC tooling)
+    + How are secrets accessed or updated (Secret Management)
++ What is your cluster running on
+    + Is your Cloud provider or on-prem hypervisor environment secure?
+    + Is the VM/OS underneath secure
+
+### Service Mesh
+
+Run a bunch of networking concerns/features inside a sidecar that each service can use. Instead of implementing them directly in each service.
+
+The usefulness of this scales with the amount of services you have. If you have just 2 services talking to each other, implement the features you care about in the services directly. Decision to use service meshes needs to be made at the beginning of the project, is the extra complexity worth the benefits? Consider capacity planning (increased resource usage), networking design, qualified people etc.
+
+[cilium](https://docs.cilium.io/en/latest/network/servicemesh/index.html)
+[istio](https://istio.io/latest/docs/overview/what-is-istio/) - [bookinfo application sample](https://istio.io/latest/docs/examples/bookinfo/)
+
+Some of the things service meshes typically do out of the box (not all of them are equal):
++ Transparent mTLS (mutual TLS) across all services. Very hard to co-ordinate/maintain and get right across 10+ services if done the traditional way.
++ Ingress permissions, service X is allowed to call service Y.
++ Network tracing/observability.
++ Routing. Route all requests to service X at this path to a particular DC/region/version.
+
+Service meshes can also do traffic shifting and steering, retries with back-offs, [canary](https://kubernetes.io/docs/concepts/workloads/management/#canary-deployments), and A/B testing using a rather simple approach. Instead of implementing these things in the application code (especially retries) or using some pieces of your infrastructure to perform canary or traffic shifting, you can define your policies in a YAML file and send it to the MESH control plane which will program the proxies running alongside your workloads. Very important other members of the project are familiar with mesh capabilities!
+
+Service Discovery - a tool like Istio uses Kubernetes Service for Service Discovery. Since each pod has a little proxy running alongside it (called sidecar), each pod in the Mesh is aware of all the other pods IP’s. When two pods talk to each other, your application will use the Service you created to find the server it wants to reach, but traffic going out of your application container is intercepted by the proxy sidecar, policies are applied to it and traffic is sent directly to the receiving end using the pod IP, there is no Load Balancing.
+
+[Ambient service mesh](https://istio.io/latest/blog/2024/ambient-reaches-beta/), without a sidecar. Since istio doesn't use eBPF it could be useful to [integrate it with cilium](https://docs.cilium.io/en/latest/network/servicemesh/istio/).
