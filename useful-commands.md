@@ -92,6 +92,13 @@ d /\\[SPAM\\]
 + tomlq
 + rq (see: open policy agent, Rego, kube-mgmt)
 
+#### [linkchecker](https://github.com/wummel/linkchecker)
+
+Check HTML documents and websites for broken links. Return value is 1 when
++ invalid links were found or
++ link warnings were found and warnings are enabled
+Supports clamav integration.
+
 #### ncdu equivalent
 
 For when [ncdu](https://dev.yorhel.nl/ncdu) is not installed.
