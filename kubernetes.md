@@ -117,8 +117,8 @@ kubens - switch namespaces faster
 
 ### [Labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
 
-Labels are key-value pairs that help filtering (API). They are intended to be used to specify identifying attributes relevant to users.
-Annotations (key-value pairs) have no validation and are meant for notes, nonidentifying metadata.
+Labels are key-value pairs that help filtering (API). They are intended to be used to specify identifying attributes relevant to users.  
+Annotations are key-value pairs that have no validation and are meant for notes, nonidentifying metadata.
 
 ### Finalizers
 
@@ -137,6 +137,13 @@ The relevant controller sees the deletionTimestamp and attempts to satisfy the r
 
 ## Kubernetes related projects
 
-[Cloud Native Computing Foundation landscape](https://landscape.cncf.io/)
-[Helm](https://helm.sh/docs/chart_best_practices/conventions) installs charts (packages) into Kubernetes, creating a new release for each installation. To find new charts, you can search Helm chart repositories.
-[kind](https://kind.sigs.k8s.io/) - for testing local Kubernetes clusters using Docker container 'nodes'.
+#### [Cloud Native Computing Foundation landscape](https://landscape.cncf.io/)
+#### [Helm](https://helm.sh/docs/chart_best_practices/conventions) installs charts (packages) into Kubernetes, creating a new release for each installation. To find new charts, you can search Helm chart repositories.
+#### [kind](https://kind.sigs.k8s.io/) - for testing local Kubernetes clusters using Docker container 'nodes'.
+
+```sh
+kind create cluster # blocks until the control plane reaches a ready status
+cat ~/.kube/config
+kubectx
+kind delete cluster
+```
