@@ -311,9 +311,9 @@ For further git configuration to allow remote checking via external transport et
 There are environment variables (traces) that help debug aspects of git.
 The possible values of these variables are as follows:
 
-+"true", "1", or "2" – the trace category is written to stderr.
++ "true", "1", or "2" – the trace category is written to stderr.
 
-+An absolute path starting with / – the trace output will be written to that file.
++ An absolute path starting with / – the trace output will be written to that file.
 
 ```sh
 GIT_TRACE=/tmp/git_trace.txt
@@ -321,4 +321,20 @@ GIT_CURL_VERBOSE=1
 ```
 ```sh
 GIT_MERGE_VERBOSITY=5
+```
+
+### CLI tools for working with git hosts
+
+#### [gitlab](https://docs.gitlab.com/cli/) - [glab](https://packages.debian.org/stable/utils/glab)
+
+Work with merge requests (pull requests).
+```sh
+glab mr --help
+```
+
+#### [github](https://cli.github.com/manual/gh) - [gh](https://packages.debian.org/stable/utils/gh)
+
+Work with pull requests.
+```sh
+gh pr --help
 ```
