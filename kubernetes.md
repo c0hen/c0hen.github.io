@@ -171,6 +171,8 @@ Done! kubectl is now configured to use "minikube" cluster and "default" namespac
 minikube pause # pause minikube without affecting deployed applications
 minikube stop
 minikube dashboard # opens the local url in your browser when ready
+minikube addons list
+kubectl cluster-info dump | less
 ```
 
 #### [chainguard](https://images.chainguard.dev/)
@@ -205,7 +207,7 @@ Deployable as a single binary that can be configured to perform different roles 
     + does it have right guard rails quota/pdb/memory requests
 + How are things going to communicate
     + Network Policies (CNI Provider)
-    + Authorization (IdP)
+    + Authorization (IdP - identity provider)
     + Encryption (Service Mesh?)
     + Can you protect it at the edge (Web Application Firewall)
 + How does your cluster operate
