@@ -85,7 +85,7 @@ $git rm --cached path/to/file
 #### Move mistakenly commited file back to staging area, don't remove local file
 
 ```sh
-$git reset --soft HEAD^
+$git reset --soft HEAD~
 $git reset HEAD path/to/unwanted_file
 $git commit -c ORIG_HEAD
 ```
@@ -213,6 +213,31 @@ $git fetch origin
 
 ```sh
 $git pull --all
+```
+
+#### Addressing parents
+
+~ always addresses linear parents, on the same branch. 2 commits before HEAD:
+```sh
+git show HEAD~2
+```
+In case of branches ^ (think of the caret symbol as branching) allows addressing a different branch, selecting the parent in case of a merge. If feature was merged into master and HEAD is at the merge commit:
+```sh
+git show HEAD^1~2 # master branch, effectively same
+git show HEAD^2~2 # feature branch, 2 commits before HEAD
+```
+Branch inspection, see what's unique to each parent of a merge.
+```sh
+git log HEAD^1 --oneline --not HEAD^2
+git log HEAD^2 --oneline --not HEAD^1
+```
+Usage with reset in case of a merge.
+```sh
+# Undo merge but keep both branches intact
+git reset HEAD^1
+
+# Go back before the merge entirely
+git reset HEAD~1
 ```
 
 #### Find upstream of all branches:
