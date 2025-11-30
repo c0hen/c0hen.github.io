@@ -30,6 +30,63 @@ operate on s (the line variable).
 echo -e "example\nwikipedia" | pz 's += ".com"'
 ```
 
+#### Vi(m)
+
+Show shell executable.
+```sh
+:set shell?
+```
+- Execute a child shell process. Exiting returns to vi.
+```sh
+:sh
+```
+- Run given shell commands and exit after pressing enter.
+```sh
+:!printf ":help :!"
+```
+- Execute current line ('.') in sh and replace it in the vi buffer with the output.
+```sh
+:.!sh
+```
+- Insert the output of the shell command in the buffer.
+```sh
+:r!date
+```
+Get the output of a shell command with system ( :help system ).
+```sh
+:call system('touch /tmp/$(date +%Y%m%d)')
+```
+```sh
+:echo system('ls -lt /tmp/$(date +%Y)* | tail')
+```
+Start a job that doesn't wait to finish ( :help job\_status ), execute with no shell.
+```sh
+:call job_start(['/bin/bash', '-c', '{ sleep 60 && printf "DONE"; }'])
+```
+
+#### Bash job control
+
+Ctrl+Z to suspend a job in bash. Sends SIGTSTP (Keyboard stop).
+Start a job in the background.
+```sh
+sleep 4500 &
+```
+Bash shell builtins for jobs. Applies to current shell process, not all user's shells.
+####
+```sh
+jobs --help
+```
+```sh
+fg # Bring to foreground. No job spec, targets shells notion of the current job
+bg %1 # Sends the first job to execute in the background
+disown %2 # Remove the second job from current shell, keeping it in the process table
+wait 20110 # Process ID or job spec
+```
+Format text in a way that is safe to use as shell input.
+```sh
+printf '%q\n' "It's magic!"
+```
+
 #### mail
 
 [mailutils.txt](https://mailutils.org/manual/mailutils.txt)
