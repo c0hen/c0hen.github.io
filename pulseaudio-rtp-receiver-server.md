@@ -12,7 +12,7 @@ tags: pulseaudio rtp systemd audio server
 Install pulseaudio-module-zeroconf on both client and server:
 
 ```sh
-$sudo apt-get install pulseaudio-module-zeroconf
+sudo apt-get install pulseaudio-module-zeroconf
 ```
 
 ### Server side:
@@ -22,7 +22,7 @@ Utilize systemd user services. Needed for pulseaudio to start after network is a
 Groups useful or needed for the user starting pulseaudio:
 
 ```sh
-$cat /etc/group | grep radiouser
+cat /etc/group | grep radiouser
   
 audio:x:29:radiouser,pulse
 systemd-journal:x:102:radiouser
@@ -36,7 +36,7 @@ pulse-access:x:114:radiouser
 
 1.  Pulseaudio user configuration, creating the listener:
   
-    ```sh
+    ```
     # ~/.config/pulse/default.pa
   
     .include /etc/pulse/default.pa
@@ -60,14 +60,14 @@ pulse-access:x:114:radiouser
 2.  Link network target (no systemctl enable needed):
   
     ```sh
-    $systemctl --user link /lib/systemd/system/network-online.target
+    systemctl --user link /lib/systemd/system/network-online.target
     ```
   
     
 3.  Enable lingering services to make them not exit with user logout:
   
     ```sh
-    $sudo loginctl enable-linger radiouser
+    sudo loginctl enable-linger radiouser
     ```
     
 4.  Create
@@ -118,7 +118,7 @@ pulse-access:x:114:radiouser
 5.  Check to see if files exist:
     
     ```sh
-    $ls ~./config/systemd/user/{.,default.target.wants}
+    ls ~./config/systemd/user/{.,default.target.wants}
   
     /home/radiouser/.config/systemd/user/.:
     default.target.wants  network-online.target  pulseaudio.service  sockets.target.wants
@@ -131,21 +131,21 @@ pulse-access:x:114:radiouser
 6.  Start pulseaudio:
     
     ```sh
-    $systemctl --user start pulseaudio.service
+    systemctl --user start pulseaudio.service
     ```
   
     
 7.  Check sink and source levels and mute with
   
     ```sh
-    $pacmd
-    $pactl
+    pacmd
+    pactl
     ```
     
   If all is well, enable the user service:
 
   ```sh
-  $systemctl --user enable pulseaudio.service
+  systemctl --user enable pulseaudio.service
   ```
 
 ### Client side:

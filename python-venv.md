@@ -36,7 +36,7 @@ python3 -m pip install --user virtualenv
 Creation of the virtual environment:
 
 ```
-$python3 -m virtualenv django-venv
+python3 -m virtualenv django-venv
 ```
 
 *Getting an error like*
@@ -50,7 +50,7 @@ ImportError: cannot import name 'Popen' from partially initialized module 'subpr
 Create and end the session you'll be installing your app in:
 
 ```
-$source bin/activate
+source bin/activate
 (django-venv)deactivate
 ```
 

@@ -41,7 +41,8 @@ done
 ```
 
 ```sh
-$cat /etc/fstab
+cat /etc/fstab
+
 # /etc/fstab: static file system information.
 # <file system> <mount point>   <type>  <options>       <dump>  <pass>
 /dev/mapper/root /               ext4    relatime,errors=remount-ro 0       1
