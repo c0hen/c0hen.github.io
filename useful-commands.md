@@ -66,7 +66,8 @@ Start a job that doesn't wait to finish ( :help job\_status ), execute with no s
 
 #### Bash job control
 
-Ctrl+Z to suspend a job in bash. Sends SIGTSTP (Keyboard stop).
+Ctrl+Z to suspend a program in bash. Sends SIGTSTP (Keyboard stop).
+
 Start a job in the background.
 ```sh
 sleep 4500 &
@@ -79,12 +80,26 @@ jobs --help
 ```sh
 fg # Bring to foreground. No job spec, targets shells notion of the current job
 bg %1 # Sends the first job to execute in the background
-disown %2 # Remove the second job from current shell, keeping it in the process table
 wait 20110 # Process ID or job spec
+```
+Remove the second job from current shell's job list, keeping it in the process table. Not reliable for running a program in the background (in case the parent shell is destroyed).
+```sh
+disown %2
+```
+Run a program in a new session. Allows bypassing potential signals from initial parents.
+```sh
+setsid --fork sleep 3600 # always create a new process
 ```
 Format text in a way that is safe to use as shell input.
 ```sh
 printf '%q\n' "It's magic!"
+```
+
+#### grep
+
+Search directory recursively for lines starting 0 or more whitespace and $.
+```sh
+grep -ER '^(\w*)\$'
 ```
 
 #### mail
