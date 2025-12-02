@@ -11,6 +11,9 @@ tags: kubernetes devops coding
 ## Kubernetes components and terms
 
 + CRD - Custom Resource Definition
+```sh
+kubectl get crd
+```
 + CRI - Container Runtime Interface (containerd, cri-o, dockershim)
 + CNI - Container Network Interface (AWS, Google and other provider implementations; calico, flannel, cilium)
 + CSI - Container Storage Interface has [different drivers](https://github.com/kubernetes-csi) that allow seamless certificate and secret insertion.
