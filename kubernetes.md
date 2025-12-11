@@ -2,7 +2,7 @@
 layout: default
 title: Kubernetes
 description: Useful for using Kubernetes
-tags: kubernetes devops coding
+tags: kubernetes k8s devops coding
 ---
 
 * Table of contents
@@ -148,6 +148,7 @@ The relevant controller sees the deletionTimestamp and attempts to satisfy the r
 
 #### [Cloud Native Computing Foundation landscape](https://landscape.cncf.io/)
 #### [Helm](https://helm.sh/docs/chart_best_practices/conventions) installs charts (packages) into Kubernetes, creating a new release for each installation. To find new charts, you can search Helm chart repositories.
+#### [Kustomize](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/)
 #### [kind](https://kind.sigs.k8s.io/) - for testing local Kubernetes clusters using Docker container 'nodes'.
 
 ```sh
@@ -156,6 +157,7 @@ cat ~/.kube/config
 kubectx
 kind delete cluster
 ```
+#### [k9s](https://k9scli.io/topics/rbac/) - vim style CLI for Kubernetes
 #### [Kubernetes dashboard](https://github.com/kubernetes/dashboard)
 
 + deploy containerized applications to a Kubernetes cluster
@@ -177,6 +179,11 @@ minikube dashboard # opens the local url in your browser when ready
 minikube addons list
 kubectl cluster-info dump | less
 ```
+
+#### Continuous Delivery based on git repos
+
+[Flux CD](https://fluxcd.io/flux/guides/)
+[Argo CD](https://argo-cd.readthedocs.io)
 
 #### [chainguard](https://images.chainguard.dev/)
 

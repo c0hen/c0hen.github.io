@@ -39,3 +39,16 @@ tags: database backup postgresql tools messaging microservices
 ### Identity Access Management
 
 Keycloak
+
+### Network security
+
+Tcpdump, Wireshark
+
+Intrusion Detection, Prevention System (IDS, IPS)
+
+[Suricata](https://docs.suricata.io)
+[Snort](https://docs.snort.org)
+
+[SysAdmin, Audit, Network, Security tools list](https://www.sans.org/tools)
+
+### [Terraform](https://registry.terraform.io/browse/providers)
