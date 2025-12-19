@@ -18,10 +18,10 @@ A good talk on git internals by [Michael Schwern at Linux.conf.au 2013](https://
 
 ### Terms
 
-master - the first branch created by default with git init, not special
-HEAD - the pointer to the branch you're currently on (have checked out)
-commit - saved state with an ID consisting of a SHA-1 checksum of all information of the state. Immutable constant - repo breaks if this is changed. Git does not change history unless forced.
-reference - a commit ID, label or tag
+- master - the first branch created by default with git init, not special
+- HEAD - the pointer to the branch you're currently on (have checked out)
+- commit - saved state with an ID consisting of a SHA-1 checksum of all information of the state. Immutable constant - repo breaks if this is changed. Git does not change history unless forced.
+- reference - a commit ID, label or tag
 
 ### Start or get a repository
 
