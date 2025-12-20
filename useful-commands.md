@@ -32,37 +32,37 @@ echo -e "example\nwikipedia" | pz 's += ".com"'
 
 #### Vi(m)
 
-Show shell executable.
-```sh
-:set shell?
-```
+- Show shell executable.
+ ```sh
+ :set shell?
+ ```
 - Execute a child shell process. Exiting returns to vi.
-```sh
-:sh
-```
+ ```sh
+ :sh
+ ```
 - Run given shell commands and exit after pressing enter.
-```sh
-:!printf ":help :!"
-```
+ ```sh
+ :!printf ":help :!"
+ ```
 - Execute current line ('.') in sh and replace it in the vi buffer with the output.
-```sh
-:.!sh
-```
+ ```sh
+ :.!sh
+ ```
 - Insert the output of the shell command in the buffer.
-```sh
-:r!date
-```
-Get the output of a shell command with system ( :help system ).
-```sh
-:call system('touch /tmp/$(date +%Y%m%d)')
-```
-```sh
-:echo system('ls -lt /tmp/$(date +%Y)* | tail')
-```
-Start a job that doesn't wait to finish ( :help job\_status ), execute with no shell.
-```sh
-:call job_start(['/bin/bash', '-c', '{ sleep 60 && printf "DONE"; }'])
-```
+ ```sh
+ :r!date
+ ```
+- Get the output of a shell command with system ( :help system ).
+ ```sh
+ :call system('touch /tmp/$(date +%Y%m%d)')
+ ```
+ ```sh
+ :echo system('ls -lt /tmp/$(date +%Y)* | tail')
+ ```
+- Start a job that doesn't wait to finish ( :help job\_status ), execute with no shell.
+ ```sh
+ :call job_start(['/bin/bash', '-c', '{ sleep 60 && printf "DONE"; }'])
+ ```
 
 #### Bash job control
 
