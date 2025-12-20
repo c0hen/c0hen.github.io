@@ -83,24 +83,24 @@ h4 {
   color: #333;
 }
 p {
-  font-size: 1.4em;
-  line-height: 1.3em;
+  font-size: 1.4rem;
+  line-height: 1.3rem;
   color: #333;
 }
 ol {
-  font-size: 1.4em;
-  line-height: 1.4em;
+  font-size: 1.4rem;
+  line-height: 1.4rem;
   color: #333;
 }
-/* ol elements nested 1 or more levels, em is a relative to parent unit */
+/* ol elements nested 1 or more levels, em is relative to parent unit */
 ol ol {
   font-size: 1em;
   line-height: 1em;
   color: #333;
 }
 ul {
-  font-size: 1.4em;
-  line-height: 1.4em;
+  font-size: 1.4rem;
+  line-height: 1.4rem;
   color: #333;
 }
 ul ul {
