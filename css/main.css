@@ -92,15 +92,26 @@ ol {
   line-height: 1.4em;
   color: #333;
 }
+/* ol elements nested 1 or more levels, em is a relative to parent unit */
+ol ol {
+  font-size: 1em;
+  line-height: 1em;
+  color: #333;
+}
 ul {
   font-size: 1.4em;
   line-height: 1.4em;
   color: #333;
 }
+ul ul {
+  font-size: 1em;
+  line-height: 1em;
+  color: #333;
+}
 
 footer {
   border-top: 1px solid #d5d5d5;
-  font-size: .8em;
+  font-size: 0.8em;
 }
 
 ul.posts { 
