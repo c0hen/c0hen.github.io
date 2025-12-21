@@ -84,6 +84,13 @@ git log --graph --decorate --all
 git diff --cached path/to/file
 ```
 
+#### Reset and checkout last state before changes, forgetting staged
+
+```sh
+git reset HEAD
+git checkout .
+```
+
 #### Remove a file that recently became untracked in .gitignore from repo
 
 ```sh
