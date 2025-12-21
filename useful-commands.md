@@ -63,6 +63,23 @@ echo -e "example\nwikipedia" | pz 's += ".com"'
  ```sh
  :call job_start(['/bin/bash', '-c', '{ sleep 60 && printf "DONE"; }'])
  ```
+- Registers (+ * ~ / : % . -)
+ ```sh
+ "+p # paste in visual mode
+ ```
+ 1. unnamed register fills when using delete or yank
+ 1. named registers a-zA-Z (write to F gets appended, f replaced)
+ 1. small delete register - (one line or less deletes, no yank)
+ 1. numbered registers 0-9 ( deletion history stack )
+ 1. GUI primary (+) and secondary (* - middle click) clipboard
+ 1. GUI drop register ~ (drag and drop)
+ 1. read only registers
+  - : most recently executed command
+  - % current file name
+  - . last inserted text
+ 1. alternate file name register # (in case of multiple open files)
+ 1. last search result register /
+
 
 #### Bash job control
 
