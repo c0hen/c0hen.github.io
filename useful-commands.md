@@ -64,11 +64,9 @@ echo -e "example\nwikipedia" | pz 's += ".com"'
  :call job_start(['/bin/bash', '-c', '{ sleep 60 && printf "DONE"; }'])
  ```
 - Registers (+ * ~ / : % . -)
-
   - c - characterwise text
   - l - linewise text
   - b - blockwise text
-
   ```sh
   :registers
   "+p # paste in visual mode
@@ -164,34 +162,34 @@ d /\\[SPAM\\]
 
 #### moreutils
 
-+ chronic: runs a command quietly unless it fails
-+ combine: combine the lines in two files using boolean operations
-+ errno: look up errno names and descriptions
-+ ifdata: get network interface info without parsing ifconfig output
-+ isutf8: check if a file or standard input is utf-8
-+ ifne: run a command if the standard input is not empty
-+ lckdo: execute a program with a lock held (deprecated)
-+ mispipe: pipe two commands, returning the exit status of the first
-+ parallel: run multiple jobs at once
-+ pee: tee standard input to pipes
-+ sponge: soak up standard input and write to a file
-+ ts: timestamp standard input
-+ vidir: edit a directory in your text editor
-+ vipe: insert a text editor into a pipe
-+ zrun: automatically uncompress arguments to command
+- chronic: runs a command quietly unless it fails
+- combine: combine the lines in two files using boolean operations
+- errno: look up errno names and descriptions
+- ifdata: get network interface info without parsing ifconfig output
+- isutf8: check if a file or standard input is utf-8
+- ifne: run a command if the standard input is not empty
+- lckdo: execute a program with a lock held (deprecated)
+- mispipe: pipe two commands, returning the exit status of the first
+- parallel: run multiple jobs at once
+- pee: tee standard input to pipes
+- sponge: soak up standard input and write to a file
+- ts: timestamp standard input
+- vidir: edit a directory in your text editor
+- vipe: insert a text editor into a pipe
+- zrun: automatically uncompress arguments to command
 
 #### data structure or configuration processing tools
 
-+ jq
-+ yq
-+ tomlq
-+ rq (see: open policy agent, Rego, kube-mgmt)
+- jq
+- yq
+- tomlq
+- rq (see: open policy agent, Rego, kube-mgmt)
 
 #### [linkchecker](https://github.com/wummel/linkchecker)
 
 Check HTML documents and websites for broken links. Return value is 1 when
-+ invalid links were found or
-+ link warnings were found and warnings are enabled
+- invalid links were found or
+- link warnings were found and warnings are enabled
 Supports clamav integration.
 
 #### ncdu equivalent

@@ -10,41 +10,41 @@ tags: kubernetes k8s devops coding
 
 ## Kubernetes components and terms
 
-+ CRD - Custom Resource Definition
+- CRD - Custom Resource Definition
 ```sh
 kubectl get crd
 ```
-+ CRI - Container Runtime Interface (containerd, cri-o, dockershim)
-+ CNI - Container Network Interface (AWS, Google and other provider implementations; calico, flannel, cilium)
-+ CSI - Container Storage Interface has [different drivers](https://github.com/kubernetes-csi) that allow seamless certificate and secret insertion.
-+ HPA - Horizontal Pod Autoscaler (activate in a deployment)
-+ Policies - [OPA Gatekeeper](https://github.com/open-policy-agent/gatekeeper), [Kubewarden](https://www.kubewarden.io/)
-+ kubelet - agent running on each worker node
-+ manifest files - describe the desired state in terms of Kubernetes API objects.
-+ cilium CNI uses eBPF directly, allowing for API aware network policies at layer 7. It also has transparent wireguard traffic encryption.
+- CRI - Container Runtime Interface (containerd, cri-o, dockershim)
+- CNI - Container Network Interface (AWS, Google and other provider implementations; calico, flannel, cilium)
+- CSI - Container Storage Interface has [different drivers](https://github.com/kubernetes-csi) that allow seamless certificate and secret insertion.
+- HPA - Horizontal Pod Autoscaler (activate in a deployment)
+- Policies - [OPA Gatekeeper](https://github.com/open-policy-agent/gatekeeper), [Kubewarden](https://www.kubewarden.io/)
+- kubelet - agent running on each worker node
+- manifest files - describe the desired state in terms of Kubernetes API objects.
+- cilium CNI uses eBPF directly, allowing for API aware network policies at layer 7. It also has transparent wireguard traffic encryption.
 
 ### Kubernetes workloads
 
-+ Deployment - declarative changes for Pods and ReplicaSets, no state
-+ StatefulSet - deployment of pods with state, with guarantees about the ordering and uniqueness of pods.
-+ DaemonSet - defines pods that provide node-local facilities.
-+ Job, CronJob - defines a task that runs to completion. NB! 3rd party CRD ecosystem
+- Deployment - declarative changes for Pods and ReplicaSets, no state
+- StatefulSet - deployment of pods with state, with guarantees about the ordering and uniqueness of pods.
+- DaemonSet - defines pods that provide node-local facilities.
+- Job, CronJob - defines a task that runs to completion. NB! 3rd party CRD ecosystem
 
 ## [Structure of a Kubernetes cluster](https://kubernetes.io/docs/concepts/architecture/)
 
 ### Control Plane
 
-+ Controllers help match the actual state to desired state
-+ CCM Cloud Controller Manager - for resources outside Kubernetes (load balancer etc) via the cloud API
-+ CM Controller Manager - builtin controllers like Job -, Deployment Controller
-+ etcd - higly available key-value store
-+ scheduler - assigns pods to new nodes based on usages
-+ api directs calls to other components
+- Controllers help match the actual state to desired state
+- CCM Cloud Controller Manager - for resources outside Kubernetes (load balancer etc) via the cloud API
+- CM Controller Manager - builtin controllers like Job -, Deployment Controller
+- etcd - higly available key-value store
+- scheduler - assigns pods to new nodes based on usages
+- api directs calls to other components
 
 ### Data Plane - contains worker node(s) which contain pods
 
-+ kubelet - spawns, probes (monitors) workloads (that contain pods)
-+ pod - smallest deployable unit that can be managed, a set of containers. Init container, application container, ephemeral (debugging)
+- kubelet - spawns, probes (monitors) workloads (that contain pods)
+- pod - smallest deployable unit that can be managed, a set of containers. Init container, application container, ephemeral (debugging)
 
 ## [Objects in Kubernetes](https://kubernetes.io/docs/concepts/overview/working-with-objects/)
 
@@ -73,8 +73,8 @@ Convert manifests between different API versions.
 
 Namespaces help different projects, teams, or customers to share a Kubernetes cluster by providing:
 
-+ A scope for Names.
-+ A mechanism to attach authorization and policy to a subsection of the cluster.
+- A scope for Names.
+- A mechanism to attach authorization and policy to a subsection of the cluster.
 
 ```sh
 kubectl config set-context dev --namespace=development \
@@ -138,9 +138,9 @@ metadata.finalizers
 ```
 field. When you attempt to delete the resource, the API server handling the delete request notices the values and does the following:
 
-+ Modifies the object to add a metadata.deletionTimestamp field with the time you started the deletion.
-+ Prevents the object from being removed until all items are removed from its metadata.finalizers field
-+ Returns a 202 status code (HTTP "Accepted")
+- Modifies the object to add a metadata.deletionTimestamp field with the time you started the deletion.
+- Prevents the object from being removed until all items are removed from its metadata.finalizers field
+- Returns a 202 status code (HTTP "Accepted")
 
 The relevant controller sees the deletionTimestamp and attempts to satisfy the requirement. On success the controller removes that key from the finalizers field. When the finalizers field is emptied, an object with a deletionTimestamp field set is automatically deleted.
 
@@ -160,11 +160,11 @@ kind delete cluster
 #### [k9s](https://k9scli.io/topics/rbac/) - vim style CLI for Kubernetes
 #### [Kubernetes dashboard](https://github.com/kubernetes/dashboard)
 
-+ deploy containerized applications to a Kubernetes cluster
-+ troubleshoot your containerized application
-+ manage the cluster resources
-+ get an overview of applications running on your cluster
-+ creating or modifying individual Kubernetes resources (such as Deployments, Jobs, DaemonSets, etc)
+- deploy containerized applications to a Kubernetes cluster
+- troubleshoot your containerized application
+- manage the cluster resources
+- get an overview of applications running on your cluster
+- creating or modifying individual Kubernetes resources (such as Deployments, Jobs, DaemonSets, etc)
 
 #### [minikube](https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2Fstable%2Fdebian+package) local Kubernetes for learning and development
 
@@ -203,29 +203,29 @@ Deployable as a single binary that can be configured to perform different roles 
 
 ### some checks to keep in mind
 
-+ What's running in the container
-    + Your Code (Static Analysis)
-    + Other peoples code (Dependency Scanning)
-    + What's in the image (Image Scanning)
-    + Can you scan it while it's running (DAST/RASP/IAST)
-+ How is that container going to run
-    + Manifest Scanning
-    + Admission Control
-    + Both of these to check for things like:
-    + does it run in a privileged way
-    + Is it going to run in the right namespace
-    + does it have right guard rails quota/pdb/memory requests
-+ How are things going to communicate
-    + Network Policies (CNI Provider)
-    + Authorization (IdP - identity provider)
-    + Encryption (Service Mesh?)
-    + Can you protect it at the edge (Web Application Firewall)
-+ How does your cluster operate
-    + Who has access (RBAC tooling)
-    + How are secrets accessed or updated (Secret Management)
-+ What is your cluster running on
-    + Is your Cloud provider or on-prem hypervisor environment secure?
-    + Is the VM/OS underneath secure
+- What's running in the container
+  - Your Code (Static Analysis)
+  - Other peoples code (Dependency Scanning)
+  - What's in the image (Image Scanning)
+  - Can you scan it while it's running (DAST/RASP/IAST)
+- How is that container going to run
+  - Manifest Scanning
+  - Admission Control
+  - Both of these to check for things like:
+  - does it run in a privileged way
+  - Is it going to run in the right namespace
+  - does it have right guard rails quota/pdb/memory requests
+- How are things going to communicate
+  - Network Policies (CNI Provider)
+  - Authorization (IdP - identity provider)
+  - Encryption (Service Mesh?)
+  - Can you protect it at the edge (Web Application Firewall)
+- How does your cluster operate
+  - Who has access (RBAC tooling)
+  - How are secrets accessed or updated (Secret Management)
+- What is your cluster running on
+  - Is your Cloud provider or on-prem hypervisor environment secure?
+  - Is the VM/OS underneath secure
 
 ### Service Mesh
 
@@ -237,10 +237,10 @@ The usefulness of this scales with the amount of services you have. If you have 
 [istio](https://istio.io/latest/docs/overview/what-is-istio/) - [bookinfo application sample](https://istio.io/latest/docs/examples/bookinfo/)
 
 Some of the things service meshes typically do out of the box (not all of them are equal):
-+ Transparent mTLS (mutual TLS) across all services. Very hard to co-ordinate/maintain and get right across 10+ services if done the traditional way.
-+ Ingress permissions, service X is allowed to call service Y.
-+ Network tracing/observability.
-+ Routing. Route all requests to service X at this path to a particular DC/region/version.
+- Transparent mTLS (mutual TLS) across all services. Very hard to co-ordinate/maintain and get right across 10+ services if done the traditional way.
+- Ingress permissions, service X is allowed to call service Y.
+- Network tracing/observability.
+- Routing. Route all requests to service X at this path to a particular DC/region/version.
 
 Service meshes can also do traffic shifting and steering, retries with back-offs, [canary](https://kubernetes.io/docs/concepts/workloads/management/#canary-deployments), and A/B testing using a rather simple approach. Instead of implementing these things in the application code (especially retries) or using some pieces of your infrastructure to perform canary or traffic shifting, you can define your policies in a YAML file and send it to the MESH control plane which will program the proxies running alongside your workloads. Very important other members of the project are familiar with mesh capabilities!
 
