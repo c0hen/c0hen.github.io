@@ -16,12 +16,15 @@ SSH keys can be used to access [Github](https://help.github.com/articles/adding-
 HEAD and branches, including master, can be pictured as labels on an object. Git commands make more sense when looking at git from the inside.
 A good talk on git internals by [Michael Schwern at Linux.conf.au 2013](https://www.youtube.com/watch?v=eQFZ_MPTVpc).
 
-### Terms
+### [Terms](https://git-scm.com/docs/gitglossary)
 
 - master - the first branch created by default with git init, not special
 - HEAD - the pointer to the branch you're currently on (have checked out)
 - commit - saved state with an ID consisting of a SHA-1 checksum of all information of the state. Immutable constant - repo breaks if this is changed. Git does not change history unless forced.
 - reference - a commit ID, label or tag
+- worktree - directory that contains a branch to work on, tree of actual checked out files
+- index - files tracked by git, .git/index (holds a snapshot of the content of the working tree, this is taken as the contents of the next commit)
+- staging - preparing files for the next commit in index (not yet part of the commit)
 
 ### Start or get a repository
 
@@ -84,11 +87,11 @@ git log --graph --decorate --all
 git diff --cached path/to/file
 ```
 
-#### Reset and checkout last state before changes, forgetting staged
+#### Reset and checkout file in the state before changes (forget staged change)
 
 ```sh
-git reset HEAD
-git checkout .
+git reset HEAD hello.c
+git checkout hello.c
 ```
 
 #### Remove a file that recently became untracked in .gitignore from repo
@@ -228,6 +231,14 @@ git fetch origin
 
 ```sh
 git pull --all
+```
+
+### More about branches
+
+#### Show repository log with graph
+
+```sh
+git log --all --oneline --graph
 ```
 
 #### Addressing parents
