@@ -76,9 +76,9 @@ echo -e "example\nwikipedia" | pz 's += ".com"'
   1. small delete register "- (one line or less deleted)
   1. named registers "a-"z"A-"Z (write to F gets appended, f replaced)
   1. read only registers
-    - ": most recently executed command
-    - "% current file name
-    - ". last inserted text
+     ": most recently executed command
+     "% current file name
+     ". last inserted text
   1. alternate file name register "# (in case of multiple open files)
   1. expression register "=
   1. last search result register "/
