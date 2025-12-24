@@ -389,3 +389,9 @@ Work with pull requests.
 ```sh
 gh pr --help
 ```
+
+#### Get a single file from a github hosted repo
+
+```sh
+wget --content-disposition https://github.com/c0hen/c0hen.github.io/blob/master/README.md?raw=true
+```
