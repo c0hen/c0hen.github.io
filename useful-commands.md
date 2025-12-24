@@ -71,19 +71,19 @@ echo -e "example\nwikipedia" | pz 's += ".com"'
   :registers
   "+p # paste in visual mode
   ```
-  1. unnamed register "" fills when using delete or yank
-  1. numbered registers "0-"9 (deletion history stack)
-  1. small delete register "- (one line or less deleted)
-  1. named registers "a-"z"A-"Z (write to F gets appended, f replaced)
-  1. read only registers
-     ": most recently executed command
-     "% current file name
-     ". last inserted text
-  1. alternate file name register "# (in case of multiple open files)
-  1. expression register "=
-  1. last search result register "/
-  1. GUI primary "+ and secondary "* , middle click clipboard
-  1. GUI drop register "~ (drag and drop)
+    1. unnamed register "" fills when using delete or yank
+    1. numbered registers "0-"9 (deletion history stack)
+    1. small delete register "- (one line or less deleted)
+    1. named registers "a-"z"A-"Z (write to F gets appended, f replaced)
+    1. read only registers:
+        - ": most recently executed command;
+        - "% current file name;
+        - ". last inserted text.
+    1. alternate file name register "# (in case of multiple open files)
+    1. expression register "=
+    1. last search result register "/
+    1. GUI primary "+ and secondary "* , middle click clipboard
+    1. GUI drop register "~ (drag and drop)
 
 #### Bash job control
 
