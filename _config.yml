@@ -2,6 +2,7 @@ description: Journal of my tinkering.
 name: C0hen
 encoding: utf-8
 exclude:
+  - github
   - LICENSE
 markdown: kramdown
 permalink: /:slug/
