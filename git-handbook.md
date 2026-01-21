@@ -390,6 +390,17 @@ Work with pull requests.
 gh pr --help
 ```
 
+```sh
+gh auth status
+gh auth switch
+```
+
+```sh
+gh pr list
+gh pr ready 2 # mark a draft request ready for review
+gh pr merge 2 --squash --body 'add gathered content' --delete-branch
+```
+
 #### Get a single file from a github hosted repo
 
 ```sh
