@@ -395,6 +395,12 @@ gh auth status
 gh auth switch
 ```
 
+Github fine grained access required for pull request merging:
+- Contents
+- Merge queues
+- Metadata
+- Pull requests
+
 ```sh
 gh pr list
 gh pr ready 2 # mark a draft request ready for review
