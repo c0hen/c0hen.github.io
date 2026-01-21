@@ -1,5 +1,7 @@
 description: Journal of my tinkering.
-name: C0hen
+name: Notes by C0hen
+title: Notes by C0hen
+author: C0hen
 encoding: utf-8
 exclude:
   - github
