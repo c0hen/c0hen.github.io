@@ -187,7 +187,7 @@ This is useful for creating Requirements Files that can re-create the exact vers
 ```python
 #!/usr/bin/env python3
 # %z not supported in python2
-# Deleting backup files by entity, determining entity from the file name. Successful backups must be larger than size, smaller are not counted. At least 3 successful backups kept (warning if first older than 35 days), no more than 3 if older than 21 days.
+# Delete backup files by entity, determine entity from the file name. Successful backups must be larger than size, smaller are not counted. At least 3 successful backups kept (warning if first older than 35 days), no more than 3 if older than 21 days.
 
 import glob, os
 import time
@@ -223,4 +223,30 @@ for infile in sorted(glob.glob('./*.tar.gz'), reverse=True):
         os.remove(infile)
     elif (age > 35):
         print( str(count) + ": " + str(age) + " days old, " + entity + " " + date1 + "   " + infile )
+```
+
+### Document, test
+
+Debugging is enabled by default in python.
+A docstring is the first line of a module, function, class, or method definition.
+Docstrings, formatted like git commit messages, are removed when using `python -OO`
+```python
+def printTruth():
+  r"""This method prints truth.
+
+  This is a raw docstring in case there's a \
+  in the docstring."""
+  print("True")
+```
+```python
+print(printTruth.__doc__)
+```
+An [assert](https://docs.python.org/3/reference/simple_stmts.html#the-assert-statement) statement and any code conditional on the value of __debug__ is removed with `python -O`
+```python
+assert age == 2
+```
+is equivalent to
+```python
+if __debug__:
+    if not age == 2: raise AssertionError
 ```
