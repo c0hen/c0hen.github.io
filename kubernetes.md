@@ -205,9 +205,9 @@ Deployable as a single binary that can be configured to perform different roles 
 
 - What's running in the container
   - Your Code (Static Analysis)
-  - Other peoples code (Dependency Scanning)
+  - Other people's code (Dependency Scanning)
   - What's in the image (Image Scanning)
-  - Can you scan it while it's running (DAST/RASP/IAST)
+  - Can you scan it while it's running (DAST / RASP / IAST)
 - How is that container going to run
   - Manifest Scanning
   - Admission Control
