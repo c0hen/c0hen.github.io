@@ -52,3 +52,8 @@ Intrusion Detection, Prevention System (IDS, IPS)
 [SysAdmin, Audit, Network, Security tools list](https://www.sans.org/tools)
 
 ### [Terraform](https://registry.terraform.io/browse/providers)
+
+Alias to run terraform in a docker container. The `providers` helps to troubleshoot bind mounts.
+```sh
+alias terraformz='docker run --rm -it -w $PWD:$PWD -v $PWD:$PWD hashicorp/terraform:latest providers'
+```
