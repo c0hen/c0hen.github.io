@@ -129,9 +129,11 @@ ansible-playbook -i inventory.ini -e @vault.yml --vault-password-file password_f
 ```
 
 Example lookup from Hashicorp Vault
+<!-- {% raw %} -->
 ```yaml
 - name: Ensure API key is present in config file
       ansible.builtin.lineinfile:
         path: /etc/app/configuration.ini
         line: "API_KEY={{ lookup('hashi_vault', 'secret=config-secrets/data/app/api-key:data token=s.FOmpGEHjzSdxGixLNi0AkdA7 url=http://localhost:8201')['key'] }}"
 ```
+<!-- {% endraw %} -->
