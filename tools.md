@@ -93,3 +93,18 @@ terraform apply
 terraform show
 terraform state list
 ```
+
+### [Ansible](https://galaxy.ansible.com/ui/collections/)
+
+#### Playbooks
+
+```sh
+ansible-playbook --syntax-check kvm_provision.yaml
+ansible-lint kvm_provision.yaml # recursive check descending to roles
+ansible-playbook --ask-become-pass kvm_provision.yaml --extra-vars vm=web01
+ansible-playbook -K kvm_provision.yaml -e vm=web01
+```
+
+Error `YAML parsing failed: Colons in unquoted values must be followed by a non-space character.`
+
+is likely caused by an indentation error.
