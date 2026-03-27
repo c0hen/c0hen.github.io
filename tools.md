@@ -100,11 +100,24 @@ terraform state list
 
 ```sh
 ansible-playbook --syntax-check kvm_provision.yaml
+yamllint -d relaxed kvm_provision.yaml
 ansible-lint kvm_provision.yaml # recursive check descending to roles
 ansible-playbook --ask-become-pass kvm_provision.yaml --extra-vars vm=web01
-ansible-playbook -K kvm_provision.yaml -e vm=web01
+ansible-playbook -K kvm_provision.yaml -e vm=web01 -e net=br0
 ```
 
-Error `YAML parsing failed: Colons in unquoted values must be followed by a non-space character.`
+Ansible-playbook error `YAML parsing failed: Colons in unquoted values must be followed by a non-space character.`
 
 is likely caused by an indentation error.
+
+#### Roles
+
+```sh
+ansible-galaxy role init kvm_provision
+```
+
+#### Secrets
+
+```sh
+ansible-vault create secrets_file.enc
+```
