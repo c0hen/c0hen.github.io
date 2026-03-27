@@ -99,11 +99,11 @@ terraform state list
 #### Playbooks
 
 ```sh
-ansible-playbook --syntax-check kvm_provision.yaml
-yamllint -d relaxed kvm_provision.yaml
-ansible-lint kvm_provision.yaml # recursive check descending to roles
-ansible-playbook --ask-become-pass kvm_provision.yaml --extra-vars vm=web01
-ansible-playbook -K kvm_provision.yaml -e vm=web01 -e net=br0
+ansible-playbook --syntax-check kvm_provision.yml
+yamllint -d relaxed kvm_provision.yml
+ansible-lint kvm_provision.yml # recursive check descending to roles
+ansible-playbook --ask-become-pass kvm_provision.yml --extra-vars vm=web01
+ansible-playbook -K kvm_provision.yml -e vm=web01 -e net=br0
 ```
 
 Ansible-playbook error `YAML parsing failed: Colons in unquoted values must be followed by a non-space character.`
@@ -112,12 +112,26 @@ is likely caused by an indentation error.
 
 #### Roles
 
+Create your new role:
 ```sh
 ansible-galaxy role init kvm_provision
 ```
 
 #### Secrets
 
+Debug output can also include secret information despite no_log settings being enabled.
+Put the encrypt_string result in a vars file like `vault.yml` containing secrets to see clearly which secrets are which. Add it to `.gitignore`
+
 ```sh
-ansible-vault create secrets_file.enc
+ansible-vault create secrets_file.enc # no secret name recorded
+ansible-vault encrypt_string 'supersecret1' --name 'vault_root_pass' >> vault.yml
+ansible-playbook -i inventory.ini -e @vault.yml --vault-password-file password_file kvm_provision.yml
+```
+
+Example lookup from Hashicorp Vault
+```yaml
+- name: Ensure API key is present in config file
+      ansible.builtin.lineinfile:
+        path: /etc/app/configuration.ini
+        line: "API_KEY={{ lookup('hashi_vault', 'secret=config-secrets/data/app/api-key:data token=s.FOmpGEHjzSdxGixLNi0AkdA7 url=http://localhost:8201')['key'] }}"
 ```
