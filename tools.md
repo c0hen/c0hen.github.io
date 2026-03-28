@@ -176,6 +176,12 @@ dependencies:
   when: monitoring_enabled | bool
 ```
 
+#### Documentation using [docsible](https://docsible.github.io/learn/templating/)
+
+```sh
+docsible --role roles/kvm_provision/ --playbook kvm_provision.yml --no-backup --graph
+```
+
 #### Secrets
 
 Debug output can also include secret information despite no_log settings being enabled.
