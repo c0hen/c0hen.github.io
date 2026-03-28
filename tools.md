@@ -96,6 +96,34 @@ terraform state list
 
 ### [Ansible](https://galaxy.ansible.com/ui/collections/)
 
+#### Configuration
+
+Generate config defaults, all commented.
+```sh
+ansible-config init --disabled > ansible.cfg
+ansible-config init --disabled -t all > ansible_full.cfg
+```
+Specify and install requirements.
+```sh
+ansible-galaxy install -r requirements.yml # roles
+ansible-galaxy collection install -r requirements.yml # collections
+```
+```yaml
+#requirements.yml
+---
+roles:
+  - src: https://my.scm.com/my-ansible-roles/role1.git
+    scm: git
+    version: master
+    name: role1
+
+collections:
+# simple notation
+  - community.libvirt
+```
+
+Specify requirements for roles in `role1/meta/main.yml` using the same notation as in `requirements.yml`
+
 #### Playbooks
 
 ```sh
@@ -120,7 +148,7 @@ ansible-galaxy role init kvm_provision
 #### Secrets
 
 Debug output can also include secret information despite no_log settings being enabled.
-Put the encrypt_string result in a vars file like `vault.yml` containing secrets to see clearly which secrets are which. Add it to `.gitignore`
+Put the encrypt_string result in a vars file like `vault.yml` containing secrets to see clearly which secrets are which. Add `vault.yml` to `.gitignore`
 
 ```sh
 ansible-vault create secrets_file.enc # no secret name recorded
