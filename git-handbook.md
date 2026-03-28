@@ -241,6 +241,34 @@ git pull --all
 git log --all --oneline --graph
 ```
 
+#### Stash changes not wanted in a commit
+
+```sh
+git add *
+git stash push -m'CSS' css/
+git stash push -m'tests' tests/
+git stash push -m'includes' _includes/
+git stash list
+git checkout -b fix_includes
+git stash show
+git stash pop stash@{0}
+git commit -m'Fix includes'
+```
+Keep the stashes and apply (copy) the target stash:
+```sh
+git checkout main
+git stash apply 1 # same as stash@{1}
+git commit -m'Modify CSS styles'
+```
+Drop a single stash:
+```sh
+git stash drop 1
+```
+Pop stashes to where needed, clear (delete) the rest:
+```sh
+git stash clear
+```
+
 #### Addressing parents
 
 ~ always addresses linear parents, on the same branch. 2 commits before HEAD:
