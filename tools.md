@@ -145,6 +145,35 @@ Create your new role:
 ansible-galaxy role init kvm_provision
 ```
 
+##### Include role conditionally:
+###### In a task
+```yaml
+# roles/webapp/tasks/main.yml
+---
+- name: Include monitoring role conditionally
+  ansible.builtin.include_role:
+    name: monitoring
+  when: webapp_enable_monitoring | default(true) | bool
+```
+###### In `meta/main.yml` using a feature flag
+```yaml
+# roles/webapp/meta/main.yml
+dependencies:
+  - role: monitoring
+    vars:
+      monitoring_enabled: "{{ webapp_enable_monitoring | default(true) }}"
+```
+```yaml
+# roles/monitoring/tasks/main.yml
+# Skip all tasks if monitoring is disabled
+---
+- name: Install monitoring agent
+  ansible.builtin.dnf:
+    name: monitoring-agent
+    state: present
+  when: monitoring_enabled | bool
+```
+
 #### Secrets
 
 Debug output can also include secret information despite no_log settings being enabled.
