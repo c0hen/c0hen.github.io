@@ -156,6 +156,7 @@ ansible-galaxy role init kvm_provision
   when: webapp_enable_monitoring | default(true) | bool
 ```
 ###### In `meta/main.yml` using a feature flag
+<!-- {% raw %} -->
 ```yaml
 # roles/webapp/meta/main.yml
 dependencies:
@@ -163,6 +164,7 @@ dependencies:
     vars:
       monitoring_enabled: "{{ webapp_enable_monitoring | default(true) }}"
 ```
+<!-- {% endraw %} -->
 ```yaml
 # roles/monitoring/tasks/main.yml
 # Skip all tasks if monitoring is disabled
