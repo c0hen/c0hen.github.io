@@ -32,6 +32,11 @@ echo -e "example\nwikipedia" | pz 's += ".com"'
 
 #### Vi(m)
 
+- Delete empty lines.
+ ```sh
+ :g/^$/d
+ :help :g
+ ```
 - Show shell executable.
  ```sh
  :set shell?
