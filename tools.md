@@ -124,6 +124,15 @@ collections:
 
 Specify requirements for roles in `role1/meta/main.yml` using the same notation as in `requirements.yml`
 
+#### Miscellaneous uses
+
+```sh
+ansible-galaxy collection list
+ansible-galaxy list
+ansible-galaxy search
+ansible-pull --only-if-changed --verify-commit site.yml
+```
+
 #### Playbooks
 
 ```sh
