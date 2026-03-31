@@ -131,6 +131,23 @@ ansible-galaxy collection list
 ansible-galaxy list
 ansible-galaxy search
 ansible-pull --only-if-changed --verify-commit site.yml
+# count changes
+ansible-playbook site.yml | grep -oE "changed=*[0-9]" | cut -d '=' -f 2
+```
+##### Test jinja2 template
+```sh
+ansible-playbook ansible_test_jinja2_template.yml --diff \
+--extra-vars="@kvmlab/roles/web_server/defaults/main.yml"
+```
+```yaml
+# playbook to test jinja2 template
+---
+- hosts: 127.0.0.1
+  tasks:
+  - name: Test jinja2template
+    template:
+      src: "kvmlab/roles/web_server/templates/nginx.conf.j2"
+      dest: "test.conf"
 ```
 
 #### Playbooks
@@ -146,6 +163,16 @@ ansible-playbook -K kvm_provision.yml -e vm=web01 -e net=br0
 Ansible-playbook error `YAML parsing failed: Colons in unquoted values must be followed by a non-space character.`
 
 is likely caused by an indentation error.
+
+#### Modules
+
+List of modules that only run when source changed:
+
+- `ansible.builtin.template`
+- `ansible.builtin.copy # copy acts like rsync regarding /`
+
+List of modules that ensure state only when parameter `state` is used:
+- `ansible.builtin.dnf`
 
 #### Roles
 

@@ -86,6 +86,10 @@ git log --graph --decorate --all
 ```sh
 git diff --cached path/to/file
 ```
+Show diff of all staged files and last commit
+```sh
+git diff --cached
+```
 
 #### Reset and checkout file in the state before changes (forget staged change)
 
