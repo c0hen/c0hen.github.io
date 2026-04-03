@@ -133,7 +133,26 @@ ansible-galaxy search
 ansible-pull --only-if-changed --verify-commit site.yml
 # count changes
 ansible-playbook site.yml | grep -oE "changed=*[0-9]" | cut -d '=' -f 2
+# get guest vm status using community.libvirt.virt module
+ansible localhost -m virt -a "name=vm_name command=status"
 ```
+Loops have the default loop_var `item` but that can be renamed in case of a conflict. `loop_control` has [other uses](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_loops.html#adding-controls-to-loops) and does not affect `until`.
+<!-- {% raw %} -->
+```yaml
+community.digitalocean.digital_ocean:
+  name: "{{ server }}"
+  state: present
+loop: "{{ servers }}"
+loop_control:
+  loop_var: server
+  pause: 3
+```
+Lookup current `loop_var`:
+```yaml
+"{{ lookup('vars', ansible_loop_var) }}"
+```
+<!-- {% endraw %} -->
+
 ##### Test jinja2 template
 ```sh
 ansible-playbook ansible_test_jinja2_template.yml --diff \

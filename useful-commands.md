@@ -16,6 +16,7 @@ tags: command shell script
 #### replace in place with sed
 ```sh
 sed -i -e 's/^/#/' filename
+sed -i '1s/^/added line to beginning of file\n/' filename
 ```
 #### -u to turn off buffering for sed
 
