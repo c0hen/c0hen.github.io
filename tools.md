@@ -205,9 +205,13 @@ Playbooks contain plays as top level elements, for using `roles`, `tasks` keywor
 ```
 Ansible loads inventory sources in the order you supply them. It defines hosts, groups, and variables as it encounters them in the source files, adding the all and ungrouped groups at the end if needed.
 ```yaml
+# inventory/test.yml
 # Keep the inventory ordering!
 kvm:
   hosts: localhost
+```
+```sh
+ansible-playbook -K -i inventory/ site.yml
 ```
 
 #### Modules
@@ -226,6 +230,7 @@ Create your new role:
 ```sh
 ansible-galaxy role init kvm_provision
 ```
+[Variable precedence](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_variables.html#understanding-variable-precedence)
 
 ##### Include role conditionally:
 ###### In a task
@@ -284,3 +289,14 @@ Example lookup from Hashicorp Vault
         line: "API_KEY={{ lookup('hashi_vault', 'secret=config-secrets/data/app/api-key:data token=s.FOmpGEHjzSdxGixLNi0AkdA7 url=http://localhost:8201')['key'] }}"
 ```
 <!-- {% endraw %} -->
+
+#### Adding [tags](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_tags.html)
+
+Special reserved tags are `always`, `never`, `tagged`, `untagged` and `all`. Both `always` and `never` are used for tagging, others for selecting which tags to run or skip.
+```yaml
+ansible-playbook example.yml --list-tags
+ansible-playbook example.yml --tags "configuration,packages" --list-tasks
+```
+##### Tag inheritance
+Define the tags at the level of your play or block, or when you add a role or import a file. Ansible applies the tags down the dependency chain to all child tasks.
+Fact gathering is an implicit task tagged with `always` so that runs in addition to tagged tasks by default.
