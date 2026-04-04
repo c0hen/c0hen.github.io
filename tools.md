@@ -131,6 +131,7 @@ ansible-galaxy collection list
 ansible-galaxy list
 ansible-galaxy search
 ansible-pull --only-if-changed --verify-commit site.yml
+ansible-inventory -i inventory/ --list
 # count changes
 ansible-playbook site.yml | grep -oE "changed=*[0-9]" | cut -d '=' -f 2
 # get guest vm status using community.libvirt.virt module
@@ -150,6 +151,10 @@ loop_control:
 Lookup current `loop_var`:
 ```yaml
 "{{ lookup('vars', ansible_loop_var) }}"
+```
+Inspect:
+```yaml
+{{ servers | type_debug }}
 ```
 <!-- {% endraw %} -->
 
@@ -182,6 +187,28 @@ ansible-playbook -K kvm_provision.yml -e vm=web01 -e net=br0
 Ansible-playbook error `YAML parsing failed: Colons in unquoted values must be followed by a non-space character.`
 
 is likely caused by an indentation error.
+
+Playbooks contain plays as top level elements, for using `roles`, `tasks` keywords.
+```yaml
+# site.yml
+---
+- name: Prepare KVM host
+  hosts: kvm # ansible group name from inventory
+  gather_facts: yes
+  become: yes
+  roles:
+    - kvm_host
+  post_tasks:
+    - name: Print ansible_hostname
+      ansible.builtin.debug:
+        var: ansible_hostname
+```
+Ansible loads inventory sources in the order you supply them. It defines hosts, groups, and variables as it encounters them in the source files, adding the all and ungrouped groups at the end if needed.
+```yaml
+# Keep the inventory ordering!
+kvm:
+  hosts: localhost
+```
 
 #### Modules
 
