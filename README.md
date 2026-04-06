@@ -41,3 +41,5 @@ Markdown (*.md) comments:
 ```
 
 Liquid Snippets in the _includes directory.
+
+Disable liquid inline in case of code conflicts using `raw` and `endraw`.

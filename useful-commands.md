@@ -22,6 +22,7 @@ jq -nr 'env|.HOME' # -r = raw
 #### replace in place with sed
 ```sh
 sed -i -e 's/^/#/' filename
+sed -i '1s/^/added line to beginning of file\n/' filename
 ```
 #### -u to turn off buffering for sed
 
@@ -38,6 +39,11 @@ echo -e "example\nwikipedia" | pz 's += ".com"'
 
 #### Vim
 
+- Delete empty lines.
+ ```sh
+ :g/^$/d
+ :help :g
+ ```
 - Show shell executable.
  ```sh
  :set shell?
@@ -277,4 +283,24 @@ Dump audio using [parallel](https://www.gnu.org/software/parallel/). Parallel us
 Make sure to change audio format according to source.
 ```sh
 parallel ffmpeg -i '{}' -map 0:1 -c:a copy '{.}.m4a' ::: /media/video/source_video_file.mkv
+```
+
+#### nginx
+
+Dump config (along with testing it)
+```sh
+nginx -T
+```
+#### find delete empty directories
+Starts from the deepest, deletes recursively up.
+```sh
+find . -depth -type d -empty -delete
+```
+#### Systemd get specific service properties
+```sh
+systemctl show --property ActiveState nginx.service
+```
+#### Systemd test if service is failed, get exit code
+```sh
+ecode=$(systemctl is-failed --quiet nginx.service)
 ```

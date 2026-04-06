@@ -2,7 +2,7 @@
 layout: default
 title: Tools
 description: Useful software and tool combos
-tags: database backup postgresql tools messaging microservices
+tags: database backup postgresql tools messaging microservices docker
 ---
 
 * Table of contents
@@ -51,4 +51,224 @@ Intrusion Detection, Prevention System (IDS, IPS)
 
 [SysAdmin, Audit, Network, Security tools list](https://www.sans.org/tools)
 
-### [Terraform](https://registry.terraform.io/browse/providers)
+### [Docker](https://hub.docker.com)
+
+[Docker CLI reference](https://docs.docker.com/reference/cli/docker/container/exec/)
+```sh
+docker run --help
+docker run hello-world
+docker pull rockylinux/rockylinux:10-ubi-micro
+docker images
+docker history rockylinux/rockylinux:10-ubi-micro
+docker inspect minikube
+docker exec --tty minikube sh -c 'uname -a'
+```
+
+### [Ansible](https://galaxy.ansible.com/ui/collections/)
+
+#### Configuration
+
+Generate config defaults, all commented.
+```sh
+ansible-config init --disabled > ansible.cfg
+ansible-config init --disabled -t all > ansible_full.cfg
+```
+Specify and install requirements.
+```sh
+ansible-galaxy install -r requirements.yml # roles
+ansible-galaxy collection install -r requirements.yml # collections
+```
+```yaml
+#requirements.yml
+---
+roles:
+  - src: https://my.scm.com/my-ansible-roles/role1.git
+    scm: git
+    version: master
+    name: role1
+
+collections:
+# simple notation
+  - community.libvirt
+```
+
+Specify requirements for roles in `role1/meta/main.yml` using the same notation as in `requirements.yml`
+
+#### Miscellaneous uses
+
+```sh
+ansible-galaxy collection list
+ansible-galaxy list
+ansible-galaxy search
+ansible-pull --only-if-changed --verify-commit site.yml
+ansible-inventory -i inventory/ --list
+# count changes
+ansible-playbook site.yml | grep -oE "changed=*[0-9]" | cut -d '=' -f 2
+# get guest vm status using community.libvirt.virt module
+ansible localhost -m virt -a "name=vm_name command=status"
+# quick fact overview
+ansible --inventory inventory/ srv-web -m ansible.builtin.setup
+```
+Loops have the default loop_var `item` but that can be renamed in case of a conflict. `loop_control` has [other uses](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_loops.html#adding-controls-to-loops) and does not affect `until`.
+<!-- {% raw %} -->
+```yaml
+community.digitalocean.digital_ocean:
+  name: "{{ server }}"
+  state: present
+loop: "{{ servers }}"
+loop_control:
+  loop_var: server
+  pause: 3
+```
+Lookup current `loop_var`:
+```yaml
+"{{ lookup('vars', ansible_loop_var) }}"
+```
+Inspect:
+```yaml
+{{ servers | type_debug }}
+```
+<!-- {% endraw %} -->
+
+##### Test jinja2 template
+```sh
+ansible-playbook ansible_test_jinja2_template.yml --diff \
+--extra-vars="@kvmlab/roles/web_server/defaults/main.yml"
+```
+```yaml
+# playbook to test jinja2 template
+---
+- hosts: 127.0.0.1
+  tasks:
+  - name: Test jinja2template
+    template:
+      src: "kvmlab/roles/web_server/templates/nginx.conf.j2"
+      dest: "test.conf"
+```
+
+#### Playbooks
+
+```sh
+ansible-playbook --syntax-check kvm_provision.yml
+yamllint -d relaxed kvm_provision.yml
+ansible-lint kvm_provision.yml # recursive check descending to roles
+ansible-playbook --ask-become-pass kvm_provision.yml --extra-vars vm=web01
+ansible-playbook -K kvm_provision.yml -e vm=web01 -e net=br0
+```
+
+Ansible-playbook error `YAML parsing failed: Colons in unquoted values must be followed by a non-space character.`
+
+is likely caused by an indentation error.
+
+Playbooks contain plays as top level elements, for using `roles`, `tasks` keywords.
+```yaml
+# site.yml
+---
+- name: Prepare KVM host
+  hosts: kvm # ansible group name from inventory
+  gather_facts: yes
+  become: yes
+  roles:
+    - kvm_host
+  post_tasks:
+    - name: Print ansible_hostname
+      ansible.builtin.debug:
+        var: ansible_hostname
+```
+Ansible loads inventory sources in the order you supply them. It defines hosts, groups, and variables as it encounters them in the source files, adding the all and ungrouped groups at the end if needed.
+```yaml
+# inventory/test.yml
+# Keep the inventory ordering!
+kvm:
+  hosts: localhost
+```
+```sh
+ansible-playbook -K -i inventory/ site.yml
+```
+
+#### Modules
+
+List of modules that only run when source changed:
+
+- `ansible.builtin.template`
+- `ansible.builtin.copy # copy acts like rsync regarding /`
+
+List of modules that ensure state only when parameter `state` is used:
+- `ansible.builtin.dnf`
+
+#### Roles
+
+Create your new role:
+```sh
+ansible-galaxy role init kvm_provision
+```
+[Variable precedence](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_variables.html#understanding-variable-precedence)
+
+##### Include role conditionally:
+###### In a task
+```yaml
+# roles/webapp/tasks/main.yml
+---
+- name: Include monitoring role conditionally
+  ansible.builtin.include_role:
+    name: monitoring
+  when: webapp_enable_monitoring | default(true) | bool
+```
+###### In `meta/main.yml` using a feature flag
+<!-- {% raw %} -->
+```yaml
+# roles/webapp/meta/main.yml
+dependencies:
+  - role: monitoring
+    vars:
+      monitoring_enabled: "{{ webapp_enable_monitoring | default(true) }}"
+```
+<!-- {% endraw %} -->
+```yaml
+# roles/monitoring/tasks/main.yml
+# Skip all tasks if monitoring is disabled
+---
+- name: Install monitoring agent
+  ansible.builtin.dnf:
+    name: monitoring-agent
+    state: present
+  when: monitoring_enabled | bool
+```
+
+#### Documentation using [docsible](https://docsible.github.io/learn/templating/)
+
+```sh
+docsible --role roles/kvm_provision/ --playbook kvm_provision.yml --no-backup --graph
+```
+
+#### Secrets
+
+Debug output can also include secret information despite no_log settings being enabled.
+Put the encrypt_string result in a vars file like `vault.yml` containing secrets to see clearly which secrets are which. Add `vault.yml` to `.gitignore`
+
+```sh
+ansible-vault create secrets_file.enc # no secret name recorded
+ansible-vault encrypt_string 'supersecret1' --name 'vault_root_pass' >> vault.yml
+ansible-playbook -i inventory.ini -e @vault.yml --vault-password-file password_file kvm_provision.yml
+```
+
+Example lookup from Hashicorp Vault
+<!-- {% raw %} -->
+```yaml
+- name: Ensure API key is present in config file
+      ansible.builtin.lineinfile:
+        path: /etc/app/configuration.ini
+        line: "API_KEY={{ lookup('hashi_vault', 'secret=config-secrets/data/app/api-key:data token=s.FOmpGEHjzSdxGixLNi0AkdA7 url=http://localhost:8201')['key'] }}"
+```
+<!-- {% endraw %} -->
+
+#### Adding [tags](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_tags.html)
+
+Special reserved tags are `always`, `never`, `tagged`, `untagged` and `all`. Both `always` and `never` are used for tagging, others for selecting which tags to run or skip.
+```yaml
+ansible-playbook example.yml --list-tags
+ansible-playbook example.yml --tags "configuration,packages" --list-tasks
+```
+##### Tag inheritance
+Define the tags at the level of your play or block, or when you add a role or import a file. Ansible applies the tags down the dependency chain to all child tasks.
+Fact gathering is an implicit task tagged with `always` so that runs in addition to tagged tasks by default.
