@@ -136,6 +136,8 @@ ansible-inventory -i inventory/ --list
 ansible-playbook site.yml | grep -oE "changed=*[0-9]" | cut -d '=' -f 2
 # get guest vm status using community.libvirt.virt module
 ansible localhost -m virt -a "name=vm_name command=status"
+# quick fact overview
+ansible --inventory inventory/ srv-web -m ansible.builtin.setup
 ```
 Loops have the default loop_var `item` but that can be renamed in case of a conflict. `loop_control` has [other uses](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_loops.html#adding-controls-to-loops) and does not affect `until`.
 <!-- {% raw %} -->

@@ -439,6 +439,35 @@ gh pr ready 2 # mark a draft request ready for review
 gh pr merge 2 --squash --body 'add gathered content' --delete-branch
 ```
 
+#### Clean up commit history / reinit the repository
+
+Deleting the .git folder may cause problems in your git repository. If you want to delete all your commit history but keep the code in its current state, it is very safe to do it as in the following:
+
+Checkout/create orphan branch (this branch won't show in git branch command):
+```sh
+    git checkout --orphan latest_branch
+```
+Add all the files to the newly created branch:
+```sh
+    git add -A
+```
+    Commit the changes:
+```sh
+    git commit -am "Initial commit, notable in description"
+```
+    Delete main (default) branch (this step is permanent):
+```sh
+    git branch -D main
+```
+    Rename the current branch to main:
+```sh
+    git branch -m main
+```
+    Finally, all changes are completed on your local repository, force update your remote repository:
+```sh
+git push -f origin main
+```
+
 #### Get a single file from a github hosted repo
 
 ```sh

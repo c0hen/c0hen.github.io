@@ -278,3 +278,23 @@ Make sure to change audio format according to source.
 ```sh
 parallel ffmpeg -i '{}' -map 0:1 -c:a copy '{.}.m4a' ::: /media/video/source_video_file.mkv
 ```
+
+#### nginx
+
+Dump config (along with testing it)
+```sh
+nginx -T
+```
+#### find delete empty directories
+Starts from the deepest, deletes recursively up.
+```sh
+find . -depth -type d -empty -delete
+```
+#### Systemd get specific service properties
+```sh
+systemctl show --property ActiveState nginx.service
+```
+#### Systemd test if service is failed, get exit code
+```sh
+ecode=$(systemctl is-failed --quiet nginx.service)
+```
