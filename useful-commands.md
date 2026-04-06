@@ -13,6 +13,12 @@ tags: command shell script
 * Table of contents
 {:toc}
 
+#### print all environment variables
+```sh
+printenv
+jq -n env
+jq -nr 'env|.HOME' # -r = raw
+```
 #### replace in place with sed
 ```sh
 sed -i -e 's/^/#/' filename
@@ -31,7 +37,7 @@ operate on s (the line variable).
 echo -e "example\nwikipedia" | pz 's += ".com"'
 ```
 
-#### Vi(m)
+#### Vim
 
 - Delete empty lines.
  ```sh
