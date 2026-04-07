@@ -2,15 +2,115 @@
 layout: default
 title: KVM
 description: Kernel Virtual Machine and QEMU notes
-tags: kvm qemu virsh
+tags: kvm qemu virsh libguestfs libvirt
 ---
 
 * Table of contents
 {:toc}
 
-## Kernel Virtual Machine (KVM) management
+## Kernel Virtual Machine (KVM) management tools and examples
 
 Graphical manager - virt-manager
+
+The qemu, libvirt and libguestfs tools are great for automation.
+
+Default configuration directory with the xml definitions of objects is `/etc/libvirt/qemu/`.
+
+Directing virt-inspector at a disk image shows OS info, mount points, file systems, installed applications without a need to attach the image in any way.
+```sh
+virt-inspector -a cloud-base-image-ubuntu.qcow2
+```
+List snapshots in a disk image.
+```sh
+qemu-img snapshot --list guest-vm.qcow2
+```
+
+No spaces allowed for ansible.builtin.command: argv! Works in Ansible.
+```sh
+qemu-img create -fqcow2 fedora_big.qcow2 15G
+```
+
+Get disk image virtual size in bytes.
+```sh
+qemu-img info --output=json fedora_small.qcow2 | jq '."virtual-size"'
+```
+### Help argument usage
+
+```sh
+virt-admin --help
+virt-admin echo --help
+virt-admin server-threadpool-set --help
+```
+Help topics seem to be an exception used in virt-admin
+```sh
+virt-admin help management
+```
+
+### Network operations using libvirt tools
+
+```sh
+virsh net-destroy --network vm-net
+virsh net-undefine vm-net # --network not required
+virsh net-list --all # include inactive networks
+virsh domifaddr guest-vm
+virsh net-info vm-net
+virsh domif-setlink --domain guest-vm --interface eth0 --state up
+virsh net-dumpxml vm-net
+virsh dumpxml guest-vm | grep 'mac address'
+virsh net-update vm-net add ip-dhcp-host '<host mac="52:54:00:6c:3c:01" name="guest-vm" ip="192.168.122.40"/>'
+```
+
+### Domain (guest vm) and disk image operations
+
+Tools used are from libvirt, libguestfs and qemu. Default libvirt disk image pool directory is `/var/lib/libvirt/images`.
+
+```sh
+virsh pool-info virt --all
+virsh pool-info -pool default
+virsh pool-dumpxml default
+qemu-img info guest-vm.qcow2
+virsh list
+virsh dominfo --domain guest-vm
+virsh shutdown guest-vm
+virsh destroy guest-vm
+virt-customize --install cloud-init -a without-cloud-init.qcow2 -v
+virt-sysprep
+virt-resize # disk, including partitions and filesystems
+virt-filesystems -a fedora_small.qcow2 --all --long -h
+```
+#### Resize a disk image
+
+`virt-resize` resizes file systems in the image seamlessly.
+
+```sh
+virt-df -a fedora_small.qcow2
+qemu-img create -f qcow2 fedora_big.qcow2 15G
+truncate --reference=fedora_small.qcow2 fedora_big.qcow2
+virt-resize --expand /dev/sda4 fedora_small.qcow2 fedora_big.qcow2
+virt-filesystems -a fedora_big.qcow2 --all --long -h
+```
+
+#### Mount disk image as a [network block device](https://kernel.org/doc/html/latest/admin-guide/blockdev/nbd.html)
+
+Activate the nbd module in the kernel, connect image, mount it somewhere.
+```sh
+modprobe nbd max_part=8
+qemu-nbd --connect=/dev/nbd0 cloud-base-image-ubuntu.qcow2
+gdisk /dev/nbd0 -l
+mount /dev/nbd0p3 /mnt/target/
+```
+Do something, like change files. Then unmount, disconnect image and deactivate the nbd module.
+```sh
+umount /mnt/target/
+qemu-nbd --disconnect /dev/nbd0
+rmmod nbd
+```
+<!-- TODO: check, create examples
+```sh
+#qemu-img resize guest-vm.qcow2 15G
+virsh console --safe guest-vm #serial
+```
+-->
 
 ## KVM bridged with physical machines
 
@@ -110,7 +210,7 @@ virsh setmem vm_name memsize --config
 
 ### For online configuration
 
-You can set the vCPU and memory while the VM is running with \-\-current instead of \-\-config, but the new numbers have to be within the maximum values already set. You can not set these maximum numbers while the VM is running. You will have to shutdown the VM.
+You can set the vCPU and memory while the VM is running with `--current` instead of `--config`, but the new numbers have to be within the maximum values already set. You can not set these maximum numbers while the VM is running. You will have to shutdown the VM.
 ```sh
 virsh shutdown vm_name
 ```
@@ -196,14 +296,9 @@ Default console speed is 9600 baud
 minicom -D /dev/ttyS0
 ```
 
-## Info
-
-### Virtual disk info
-```sh
-qemu-img info /var/lib/libvirt/images/disk.img
-```
-
 ## Automated VM deployment of debian with preseed.cfg
+
+This Debian 9 example is deprecated but latest preseed examples exist on [debian.org](https://www.debian.org/releases/stable/example-preseed.txt).
 
 virtual.sh
 
@@ -218,7 +313,7 @@ virt-install --connect=qemu:///system \
 	--graphics none \
 	--location http://httpredir.debian.org/debian/dists/stretch/main/installer-amd64/ \
 	--network bridge=br0 \
-	--initrd-inject=/home/diabloid/virt/preseed.cfg \
+	--initrd-inject=/home/user1/virt/preseed.cfg \
 	--extra-args 'auto' \
 	--disk=pool=virt,size=20,format=qcow2,bus=virtio
 #	--extra-args 'console=ttyS0,115200n8 serial'

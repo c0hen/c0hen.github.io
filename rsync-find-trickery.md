@@ -1,27 +1,28 @@
 ---
 layout: default
-title: Rsync and find trickery
+title: Rsync and find on a file server
 description: Tips on how to use rsync and find via cron to automate.
 tags: rsync find cron filesystems server lvm tips
 ---
 
-### School: file, surveillance and log server
+### School: file and surveillance video server
 
 ```sh
 sudo crontab -l
 # executed using sh
 # m h  dom mon dow   command
-30 2 * * 1,2,3,4,5,6 /root/tools/backup_all.sh
-00 1 * * 1 /root/tools/samba_archive.sh
+30 2 * * 1,2,3,4,5,6 /root/bin/backup_all.sh
+00 1 * * 1 /root/bin/samba_archive.sh
 # delete surveillance older than a month
 15 2 * * 1,2,3,4,5,6 /usr/bin/find /media/video/ -iname '*.mp4' -mtime +30 -exec rm {} \;
+# delete what causes problems
 10 2 * * 1,2,3,4,5,6 /usr/bin/find /srv/sambashared/ -iname '*considered*harmful*.exe' -delete
 # move samba grade folder contents to next year
-0 4 30 8 * /root/tools/move_sambashared.sh
+0 4 30 8 * /root/bin/move_sambashared.sh
 ```
 
 ```sh
-sudo cat /root/tools/move_sambashared.sh
+sudo cat /root/bin/move_sambashared.sh
 #!/bin/sh
 # Move sambashared files and directories to the next year's partition, delete files of the graduated grade.
 # test changes:

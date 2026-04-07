@@ -8,13 +8,36 @@ tags: git beginner tips
 * Table of contents
 {:toc}
 
+# Git
+
 Thoroughly assemble your .gitignore - files excluded from the remote repository.
-SSH keys can be used to access [Github](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/)
+SSH keys can be used to access remote git repositories.
 
 **Try to use small changes/commits and concise messages.**
 
 HEAD and branches, including master, can be pictured as labels on an object. Git commands make more sense when looking at git from the inside.
 A good talk on git internals by [Michael Schwern at Linux.conf.au 2013](https://www.youtube.com/watch?v=eQFZ_MPTVpc).
+
+## Git start
+
+It's easiest to experiment on the local system.
+```sh
+mkdir -p ~/git/myrepo
+cd ~/git/myrepo
+git init
+cd /tmp/
+git clone ~/git/myrepo
+cat /tmp/myrepo/.git/config
+```
+```
+*** snip ***
+[remote "origin"]
+	url = /home/user1/git/myrepo/
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+```
 
 ### [Terms](https://git-scm.com/docs/gitglossary)
 
@@ -29,11 +52,11 @@ A good talk on git internals by [Michael Schwern at Linux.conf.au 2013](https://
 ### Start or get a repository
 
 ```sh
-git init myrepo.git
+git init myrepo
 git clone https://github.com/c0hen/c0hen.github.io
 ```
 
-### Very basic flow with remote:
+### Very basic flow with remote
 
 git pull is git fetch && git merge
 
@@ -66,8 +89,6 @@ git push
 git checkout thing maybe_more_things
 ```
 means "switch to", "make active in current context", for example get a file from the status of a commit Bravo and put it into the git directory as it was at the time of commit Bravo.
-
-[Try and learn it on Github](https://try.github.io/levels/1/challenges/1)
 
 #### Display commit messages
 
@@ -118,15 +139,6 @@ git commit -c ORIG_HEAD
 git checkout path/to/file
 ```
 
-#### Squash 2 pushed commits
-
-Using --force may overwrite refs other than the current branch, including local ones. man git push
-
-```sh
-git rebase -i origin/master~1 master
-git push origin +master
-```
-
 #### Remove pushed commit from repo 
 
 Resets local files in repo. --hard means check out the change in addition to reset.
@@ -168,18 +180,12 @@ git log --diff-filter=D --summary
 git pull --rebase
 ```
 
-Take care to understand each rebase.
+Take care to understand each rebase. Tends to be confusing, I prefer merging `main` profusely and then [squash merging into a (new) finalized branch](#clean-commit-history).
 Rebasing allows to merge related commits and keep mistakes from littering the project's history.
 
 ```sh
 git rebase -i
 git push
-```
-To automatically rebase before a pull add this to git config:
-
-```
-[pull]
-        rebase = true
 ```
 
 #### Remove a manually deleted file from tree
@@ -188,7 +194,7 @@ To automatically rebase before a pull add this to git config:
 git ls-files --deleted -z | xargs -0 git rm
 ```
 
-### Branches
+## Branches
 
 ### New feature testing workflow
 
@@ -206,11 +212,12 @@ git merge master
 ```
 Run your tests. Fix as necessary and retest until code ok. Add and commit as needed.
 
-#### Commit branch to master
+#### Merge and commit branch to master
 
 ```sh
 git checkout master
 git merge social
+git commit
 ```
 
 #### Create a branch and switch to it
@@ -329,7 +336,7 @@ git ls-remote remotename
 
 Add an existing git remote, check that it was added by listing remotes.
 ```sh
-git remote add remotename gituser@secondary.server:/path/to/myrepo.git 
+git remote add remotename gituser@secondary.gitdomain.tld:/path/to/myrepo
 git remote -v
 ```
 
@@ -338,7 +345,7 @@ git remote -v
 Can be set per repository. See man git-config
 
 ```sh
-cd myrepo.git
+cd myrepo
 git config core.sshCommand "ssh -i ~/.ssh/id_git -F /dev/null"
 ```
 
@@ -354,30 +361,29 @@ adduser gituser
 addgroup gitgroup
 su gituser
 cd
-git --bare --shared=group init myrepo.git
-chgrp gitgroup myrepo.git
+git --bare --shared=group init myrepo
+chgrp gitgroup myrepo
 ```
 
 On the machine you have your current latest repo and plan to push from:
 ```sh
-cd myrepo.git
+cd myrepo
 ```
 Allow external protocol, ssh transport with separate key.
 Only from user initiated commands, not from git initiated automated commands.
-See man git-config, one SSH key is simpler and allows avoiding configuring
-the external ssh transport.
+See man git-config, one SSH key is simpler and allows avoiding configuring the external ssh transport.
 ```sh
 git config protocol.allow.ext user
 ```
-Copy your ssh key to the secondary server, test login.
+Copy your ssh key to the secondary.gitdomain.tld, test login.
 ```sh
-ssh-copy-id -i ~/.ssh/id_secondary gituser@secondary.server 
-ssh gituser@secondary.server
+ssh-copy-id -i ~/.ssh/id_secondary gituser@secondary.gitdomain.tld
+ssh gituser@secondary.gitdomain.tld
 exit
 ```
 Add the remote with the short name "secondary" and ssh URL
 ```sh
-git remote add secondary 'ext::ssh -i ~/.ssh/id_secondary gituser@secondary.server %S /home/gituser/myrepo.git'
+git remote add secondary 'ext::ssh -i ~/.ssh/id_secondary gituser@secondary.gitdomain.tld %S /home/gituser/myrepo'
 ```
 List remotes
 ```sh
@@ -387,7 +393,73 @@ Push your up to date local repo to the remote secondary repo
 ```sh
 git push secondary
 ```
-For further git configuration to allow remote checking via external transport etc, see man git-config.
+For further git configuration to allow remote checking via external transport etc, see `man git-config`.
+
+#### Clean up commit history / reinit the repository {#reinit-repository-method}
+
+Deleting the .git folder may cause problems in your git repository. If you want to delete all your commit history but keep the code in its current state, it is very safe to do it as in the following:
+
+Checkout/create orphan branch (this branch won't show in git branch command).
+```sh
+git checkout --orphan latest_branch
+```
+Add all the files to the newly created branch:
+```sh
+git add -A
+```
+Commit the changes:
+```sh
+git commit -am "Initial commit, notable in description"
+```
+Delete main (default) branch (this step is permanent).
+```sh
+git branch -D main
+```
+Rename the current branch to main:
+```sh
+git branch -m main
+```
+Finally, all changes are completed on your local repository, force update your remote repository.
+```sh
+git push -f origin main
+```
+
+#### Clean up branch commit history avoiding rebase {#clean-commit-history}
+
+Similar to the [reinit method](#reinit-repository-method). This method has been automated as push as the last step by [arielf](https://github.com/arielf/clean-push/tree/main).
+
+Rebase is confusing. Usual `git merge --squash` does not show a branch as merged.
+```sh
+git log --graph --decorate --pretty=oneline --abbrev-commit
+```
+Get a clean commit history from a long used feature branch, say `xml_support`. Pull before this to be sure no changes sneak in.
+
+1. Create a new branch from the commit the main branch diverged from the feature branch, `main` if nothing has been added since.
+```sh
+git branch xml_support_finalized main
+```
+1. Squash merge feature branch into the new branch.
+```sh
+git merge --squash xml_support xml_support_finalized
+git commit -m'Add XML support' # or skip -m and see what is merged, edit the message.
+```
+1. Merge the new branch into main.
+```sh
+git checkout main
+git merge xml_support_finalized
+git diff main xml_support
+```
+1. If merging into main failed you can hard reset and merge again.
+```sh
+git reset --hard id_of_commit_before_merge
+```
+1. Success! Clean up, removing the branches. Since `xml_support` has the same content as the merged `xml_support_finalized`, it's safe to ignore warnings about it not being merged.
+
+#### Get a single file from a github hosted repo
+
+```sh
+wget --content-disposition https://github.com/c0hen/c0hen.github.io/blob/master/README.md?raw=true
+```
 
 ### git environment variables and debugging
 
@@ -427,7 +499,7 @@ gh auth status
 gh auth switch
 ```
 
-Github fine grained access required for pull request merging:
+Github fine grained access required for pull request merging seems to be:
 - Contents
 - Merge queues
 - Metadata
@@ -437,39 +509,4 @@ Github fine grained access required for pull request merging:
 gh pr list
 gh pr ready 2 # mark a draft request ready for review
 gh pr merge 2 --squash --body 'add gathered content' --delete-branch
-```
-
-#### Clean up commit history / reinit the repository
-
-Deleting the .git folder may cause problems in your git repository. If you want to delete all your commit history but keep the code in its current state, it is very safe to do it as in the following:
-
-Checkout/create orphan branch (this branch won't show in git branch command):
-```sh
-    git checkout --orphan latest_branch
-```
-Add all the files to the newly created branch:
-```sh
-    git add -A
-```
-    Commit the changes:
-```sh
-    git commit -am "Initial commit, notable in description"
-```
-    Delete main (default) branch (this step is permanent):
-```sh
-    git branch -D main
-```
-    Rename the current branch to main:
-```sh
-    git branch -m main
-```
-    Finally, all changes are completed on your local repository, force update your remote repository:
-```sh
-git push -f origin main
-```
-
-#### Get a single file from a github hosted repo
-
-```sh
-wget --content-disposition https://github.com/c0hen/c0hen.github.io/blob/master/README.md?raw=true
 ```

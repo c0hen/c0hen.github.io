@@ -1,11 +1,14 @@
 ---
 layout: default
-title: Udev network device names
-description: Create custom, static, machine independent network device names to simplify firewalling and scripting.
-tags: udev network debian
+title: Udev rules network device names
+description: Create custom udev rules
+tags: udev network debian deprecated
 ---
+### Debian 9 network name example is deprecated, here to show udev rule creation
 
-Udev network device names by default change to BIOS/UEFI location based names in Debian Stretch.
+Create custom, static, machine independent network device names to simplify firewalling and scripting.
+
+Udev network device names by default change to BIOS/UEFI location based names in Debian Stretch (9).
 
 ```sh
 /usr/share/doc/udev/README.Debian.gz
@@ -37,4 +40,3 @@ To make the changes take effect:
 ```sh
 sudo update-initramfs -u
 ```
-
