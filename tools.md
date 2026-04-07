@@ -2,7 +2,7 @@
 layout: default
 title: Tools
 description: Useful software and tool combos
-tags: database backup postgresql tools messaging microservices docker
+tags: database backup postgresql tools messaging microservices terraform docker
 ---
 
 * Table of contents
@@ -62,6 +62,36 @@ docker images
 docker history rockylinux/rockylinux:10-ubi-micro
 docker inspect minikube
 docker exec --tty minikube sh -c 'uname -a'
+```
+
+### [Terraform](https://registry.terraform.io/browse/providers)
+
+```sh
+terraform -install-autocomplete
+```
+
+Alias to run terraform in a docker container.
+```sh
+alias terraformz='docker run --rm -it -w $PWD -v $PWD:$PWD hashicorp/terraform:latest'
+```
+The `providers` helps to troubleshoot bind mounts.
+```sh
+docker run --rm -it -w $PWD -v $PWD:$PWD hashicorp/terraform:latest providers
+```
+
+Define infra, initialize, validate.
+```sh
+terraform init
+terraform fmt
+terraform validate
+terraform plan
+```
+
+Create infrastructure, inspect.
+```sh
+terraform apply
+terraform show
+terraform state list
 ```
 
 ### [Ansible](https://galaxy.ansible.com/ui/collections/)
