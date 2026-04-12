@@ -34,6 +34,23 @@ Get disk image virtual size in bytes.
 ```sh
 qemu-img info --output=json fedora_small.qcow2 | jq '."virtual-size"'
 ```
+
+Show supported qemu machine types
+```sh
+qemu-system-amd64 -machine ?
+```
+Relevant guest vm xml to test the values in. Consider setting `firmware=uefi` to avoid troubles with modern cloud images.
+```xml
+<os firmware=uefi>
+  <type arch='x86_64' machine='q35'>hvm</type>
+  <boot dev='hd'/>
+</os>
+```
+Regular undefine results in error `cannot undefine domain with nvram`, specify `--nvram`.
+```sh
+virsh undefine --nvram guest-vm-with-uefi
+```
+
 ### Help argument usage
 
 ```sh
@@ -73,7 +90,9 @@ virsh list
 virsh dominfo --domain guest-vm
 virsh shutdown guest-vm
 virsh destroy guest-vm
+virsh undefine guest-vm
 virt-customize --install cloud-init -a without-cloud-init.qcow2 -v
+virt-sparsify --in-place without-cloud-init.qcow2
 virt-sysprep
 virt-resize # disk, including partitions and filesystems
 virt-filesystems -a fedora_small.qcow2 --all --long -h
@@ -289,11 +308,63 @@ and reboot the VM.
 
 Default console speed is 9600 baud
 
-
 [Minicom](https://salsa.debian.org/minicom-team/minicom) is an easy to use serial communication program.
 
 ```sh
 minicom -D /dev/ttyS0
+```
+
+## Proxmox Virtual Environment
+
+Proxmox is an open source [enterprise grade environment](https://www.proxmox.com/en/products/proxmox-virtual-environment/features) integrating KVM and LXC (Linux Containers). It is based on Debian.
+
+Configuration location on host nodes.
+```
+/etc/pve
+```
+
+[Command line tools](https://pve.proxmox.com/wiki/Command_Line_Tools).
+
+```sh
+qm # KVM (qemu)
+pct # LXC
+vzdump # backup
+qmrestore
+pct restore
+pvecm # cluster management
+pvesm # storage management
+ha-manager # high availability
+```
+`pve-ha-simulator` allows testing high availability functions on a simulated proxmox cluster.
+
+### Sample proxmox scenarios
+
+Do not alternate between command line and web interface! Needs `qm rescan` / refreshing the management page to sync statuses properly?
+
+#### Backup
+
+```sh
+vzdump 310 --compress zstd --quiet 1 --mailnotification failure --mode stop --storage STORAGE
+```
+
+#### Found stale volume copy / vm image, move manually
+
+```sh
+qm rescan -vmid 310 # on the node that contains the vm
+# move to shared storage if the target storage does not exist on destination
+qm move_disk <vmid> <disk> <storage>
+qm config <vmid> # show current config
+pvecm list # cluster manager list nodes
+qm migrate <ip> <vmid>
+```
+
+#### Extract vma.lzo file (ZFS)
+
+```sh
+zstd -d <file.vma.zst> -o /my/target/file.vma
+vma extract -v <file.vma> <not already created directory>
+# (optional) convert to qcow2
+qemu-img convert -O qcow2 <input file.raw> <output file.qcow2>
 ```
 
 ## Automated VM deployment of debian with preseed.cfg

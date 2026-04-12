@@ -22,7 +22,18 @@ jq -nr 'env|.HOME' # -r = raw
 #### replace in place with sed
 ```sh
 sed -i -e 's/^/#/' filename
-sed -i '1s/^/added line to beginning of file\n/' filename
+sed -i '1s/^/added line before 1st line of file\n/' filename
+```
+Empty files don't have that first line and are not affected.
+
+#### Find, grep, sed find files with pattern and replace
+
+```sh
+find group_vars/ -type f -name '*.yml' ! -exec grep -q -- '---' '{}' \; -print
+
+find group_vars/ -type f -name '*.yml' \
+! -exec grep -q -- '---' '{}' ';' \
+-exec sed -i '1s/^/---\n/' '{}' '+'
 ```
 #### -u to turn off buffering for sed
 
@@ -222,6 +233,14 @@ ripgrep - alternative to grep.
 debian package name ripgrep.
 ```sh
 rg
+```
+[Uv](https://docs.astral.sh/uv/guides/projects/) claims to replace `virtualenv`, `pip`, `pip-tools`, `pipx`, `poetry`, `pyenv`, `twine`.
+```sh
+uv
+```
+`pre-commit`, `husky` alternative
+```sh
+prek
 ```
 
 #### pass

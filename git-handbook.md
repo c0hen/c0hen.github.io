@@ -18,7 +18,7 @@ SSH keys can be used to access remote git repositories.
 HEAD and branches, including master, can be pictured as labels on an object. Git commands make more sense when looking at git from the inside.
 A good talk on git internals by [Michael Schwern at Linux.conf.au 2013](https://www.youtube.com/watch?v=eQFZ_MPTVpc).
 
-## Git start
+## Git brisk start
 
 It's easiest to experiment on the local system.
 ```sh
@@ -37,6 +37,27 @@ cat /tmp/myrepo/.git/config
 [branch "master"]
 	remote = origin
 	merge = refs/heads/master
+```
+Add a remote.
+```sh
+mkdir -p /media/backup/git/myrepo/
+git init /media/backup/git/myrepo/
+git remote add backup_repo /media/backup/git/myrepo/
+cd /tmp/myrepo
+touch hello
+git add hello
+git commit -m'added greetings'
+```
+Since `backup_repo` already contains the master branch, it needs another before we can push master in /tmp/myrepo to it.
+```sh
+git branch try_push
+git checkout try_push
+git branch
+git push backup_repo try_push
+cd /media/backup/git/myrepo/
+git checkout try_push
+cd /tmp/myrepo
+git push crucial master
 ```
 
 ### [Terms](https://git-scm.com/docs/gitglossary)
@@ -460,6 +481,23 @@ git reset --hard id_of_commit_before_merge
 ```sh
 wget --content-disposition https://github.com/c0hen/c0hen.github.io/blob/master/README.md?raw=true
 ```
+## Worktrees
+
+```sh
+git worktree list
+git worktree add --checkout xml_support
+git branch
+git worktree add -b xml_support_hotfix
+```
+In general, all pseudo refs are per-worktree and all refs starting with refs/ are shared. Pseudo refs are ones like HEAD which are directly under `$GIT_DIR` instead of inside `$GIT_DIR/refs`. There are exceptions, however: refs inside refs/bisect, refs/worktree and refs/rewritten are not shared.
+```sh
+git rev-parse --verify HEAD
+```
+To access refs, it’s best not to look inside `$GIT_DIR` directly. Instead use commands such as `git-rev-parse` or `git-update-ref` which will handle refs correctly.
+
+By default, the repository config file is shared across all worktrees.
+
+## Debugging and helper tools
 
 ### git environment variables and debugging
 
