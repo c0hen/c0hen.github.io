@@ -4,7 +4,7 @@ layout: default
 tags: siteinfo
 ---
 
-# c0hen.github.io
+# c0hen.github.io {#top}
 
 Testing Jekyll and trying to organize my tinkerings.
 
@@ -43,3 +43,5 @@ Markdown (*.md) comments:
 Liquid Snippets in the _includes directory.
 
 Disable liquid inline in case of code conflicts using `raw` and `endraw`.
+
+Jump to heading on [another page](/useful-commands/#vim) with id `vim` on this site.

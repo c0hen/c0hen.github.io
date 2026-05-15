@@ -252,3 +252,24 @@ if __debug__:
 ```
 
 [Pytest](https://docs.pytest.org/en/stable)
+
+### Python string manipulation
+
+#### Appending or extending a list
+
+Append when adding a single element, extend when adding all elements of a list.
+
+```python
+result = [
+  "This list will contain",
+]
+s = "all elements of the list a: "
+a = [
+  "fox",
+  "wolf",
+  "bear",
+]
+result.append(s)
+result.extend(a)
+print(result)
+```

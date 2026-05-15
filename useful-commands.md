@@ -2,7 +2,7 @@
 layout: default
 title: Useful commands and scripts
 description: Useful command examples and scripts to modify to your liking.
-tags: command shell script
+tags: command shell script rust vim tools fast lightweight
 ---
 
 **Some here are scripts, those begin with a shebang**
@@ -12,6 +12,8 @@ tags: command shell script
 
 * Table of contents
 {:toc}
+
+### Main
 
 #### print all environment variables
 ```sh
@@ -48,7 +50,7 @@ operate on s (the line variable).
 echo -e "example\nwikipedia" | pz 's += ".com"'
 ```
 
-#### Vim
+#### Vim {#vim}
 
 - Delete empty lines.
  ```sh
@@ -146,6 +148,12 @@ Search directory recursively for lines starting 0 or more whitespace and $.
 grep -ER '^(\w*)\$'
 ```
 
+#### find delete empty directories
+Starts from the deepest, deletes recursively up.
+```sh
+find . -depth -type d -empty -delete
+```
+
 #### mail
 
 [mailutils.txt](https://mailutils.org/manual/mailutils.txt)
@@ -222,6 +230,17 @@ For when [ncdu](https://dev.yorhel.nl/ncdu) is not installed.
 du -d1 -h | sort -h
 ```
 
+### Rust tools
+
+#### Bacon {#bacon}
+
+[bacon](https://docs.rs/crate/bacon/latest) - background code checker designed for minimal interaction. It has [analyzers](https://dystroy.org/bacon/analyzers/) for Rust, python, javascript, typescript, C++, Go.
+
+[Kondo](https://github.com/tbillington/kondo) recursively cleans project directories. Interface to `rm -rf` build files.
+```sh
+kondo --dry-run
+```
+
 #### Faster alternatives written in Rust
 
 fd - alternative to find.
@@ -234,6 +253,8 @@ debian package name ripgrep.
 ```sh
 rg
 ```
+[runiq](https://github.com/whitfin/runiq) filters duplicate lines. Alternative to uniq.
+
 [Uv](https://docs.astral.sh/uv/guides/projects/) claims to replace `virtualenv`, `pip`, `pip-tools`, `pipx`, `poetry`, `pyenv`, `twine`.
 ```sh
 uv
@@ -242,6 +263,29 @@ uv
 ```sh
 prek
 ```
+[watchexec](https://github.com/watchexec/watchexec) watches a path and runs a command whenever it detects modifications.
+
+#### Other alternatives written in Rust
+
+eza - ls
+
+bat - cat
+
+xh - httpie. Friendlier interface than curl, can print out an equivalent curl command.
+
+[zellij](https://github.com/zellij-org/zellij) - tmux, screen
+
+du-dust - du like
+
+dua-cli - ncdu
+
+hyperfine - benchmarking, default repeated runs
+
+helix, evil-helix - vim
+
+just, mask - make
+
+### Extra
 
 #### pass
 
@@ -309,11 +353,6 @@ parallel ffmpeg -i '{}' -map 0:1 -c:a copy '{.}.m4a' ::: /media/video/source_vid
 Dump config (along with testing it)
 ```sh
 nginx -T
-```
-#### find delete empty directories
-Starts from the deepest, deletes recursively up.
-```sh
-find . -depth -type d -empty -delete
 ```
 #### Systemd get specific service properties
 ```sh

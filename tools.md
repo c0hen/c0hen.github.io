@@ -2,7 +2,7 @@
 layout: default
 title: Tools
 description: Useful software and tool combos
-tags: database backup postgresql tools messaging microservices docker
+tags: database backup postgresql tools messaging microservices docker static-analysis IaC security
 ---
 
 * Table of contents
@@ -39,6 +39,19 @@ tags: database backup postgresql tools messaging microservices docker
 ### Identity Access Management
 
 Keycloak
+
+### Code vulnerability scanning, security
+
+#### Static code analysis {#static-analysis}
+
+##### [trivy](https://github.com/aquasecurity/trivy)
+Scan code repositories, binary artifacts, container images, and Kubernetes clusters.
+
+##### [grype](https://github.com/anchore/grype)
+Scan images, filesystems, Software Bill of Materials (SBOM).
+
+##### [checkov](https://www.checkov.io/7.Scan%20Examples/Kubernetes.html) {#static-analysis-checkov}
+IaC scan tool. Evaluation of policies on Kubernetes files, manifest scanning.
 
 ### Network security
 

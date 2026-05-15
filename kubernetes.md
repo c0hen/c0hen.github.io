@@ -189,22 +189,16 @@ kubectl cluster-info dump | less
 
 Aims to minimize vulnerabilities by providing container images. Latest versions are free.
 
-#### [checkov](https://www.checkov.io/7.Scan%20Examples/Kubernetes.html)
-
-Evaluation of policies on your Kubernetes files, manifest scanning.
-
 #### [jaeger](https://www.jaegertracing.io/docs/) flexible distributed tracing platform
 
 Deployable as a single binary that can be configured to perform different roles within the Jaeger architecture.
-
-#### [linkerd](https://linkerd.io/2.19/features/)
 
 ## Security
 
 ### some checks to keep in mind
 
 - What's running in the container
-  - Your Code (Static Analysis)
+  - Your Code ([Static Analysis](/tools/#static-analysis-checkov))
   - Other people's code (Dependency Scanning)
   - What's in the image (Image Scanning)
   - Can you scan it while it's running (DAST / RASP / IAST)
@@ -235,6 +229,7 @@ The usefulness of this scales with the amount of services you have. If you have 
 
 [cilium](https://docs.cilium.io/en/latest/network/servicemesh/index.html)
 [istio](https://istio.io/latest/docs/overview/what-is-istio/) - [bookinfo application sample](https://istio.io/latest/docs/examples/bookinfo/)
+[linkerd](https://linkerd.io/2.19/features/)
 
 Some of the things service meshes typically do out of the box (not all of them are equal):
 - Transparent mTLS (mutual TLS) across all services. Very hard to co-ordinate/maintain and get right across 10+ services if done the traditional way.
