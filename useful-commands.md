@@ -15,12 +15,106 @@ tags: command shell script rust vim tools fast lightweight
 
 ### Main
 
+#### Control characters
+
+- EOT - End Of Transmission, ^D (Ctrl+d)
+- ETX - End Of Text, ^C
+- LF - Line Feed, ^J
+- CR - Carriage Return, ^R
+
+#### skeleton template path
+
+```sh
+/etc/skel
+```
+
+#### Special variables and parameters of the shell
+
+`man bash` does not mention special parameters in full form, they are listed under the Special Parameters section. This is due to all variables being prefixed with `$` on use. For example, `$$` is `$` in the manual. Same with dash.
+
+Other shells may have different conventions.
+
+- fish - `man fish-doc` provides translations to bash, search for `Special variables`
+- zsh - `man zshparams`, search for `PARAMETERS SET BY THE SHELL`
+- nu
+```
+wget --content-disposition \
+https://github.com/nushell/nushell.github.io/blob/main/book/special_variables.md?raw=true
+```
+
+#### Shell operators, add to variable
+
+For help on operators, search for `test` expression.
+
+```sh
+man $(basename $SHELL) # bash, dash
+help test # fish
+```
+
+Helper function for environmental variables.
+
+```sh
+push_path_to_var() {
+  if [ $# -ne 2 ] || [ ! -x "$2" ] || [ ! -d "$2" ]; then
+    printf "Usage: push_path_to_var VAR executable_directory\n"
+    printf 'Current $1: %s $2: %s\n' "$1" "$2"
+    return 1
+  fi
+  # Appends the content of VAR to the argument array.
+  # 'set --' to change the positional parameters without changing any options
+  eval set -- "$1 $2 \$$1"
+
+  # If the variable is empty, set it
+  if [ -z "$3" ]; then
+    eval "export $1=$2"
+  else
+    case ":$3:" in
+      # If path already exists in VAR do nothing
+      *":$2:"*) ;;
+      # prepend path to VAR
+      *) eval "$1=$2:$3" ;;
+    esac
+  fi
+}
+
+push_path_to_var PATH "$HOME/bin"
+```
+
 #### print all environment variables
+
 ```sh
 printenv
 jq -n env
 jq -nr 'env|.HOME' # -r = raw
+set # list values, including functions
 ```
+
+#### man pages and paths
+
+`manpath` is installed as part of [man-db](https://gitlab.com/man-db/man-db).
+
+```sh
+manpath --debug
+```
+
+User man pages should be installable to `$XDG_DATA_HOME/man` if XDG spec is followed and `XDG_DATA_HOME` is the default `$HOME/.local/share`. If it is a custom path, the relationship with `$HOME/.local/bin` can break.
+
+```sh
+manpath --debug
+
+... snip ...
+path directory /home/user/.local/bin is not in the config file
+  adding /home/user/.local/share/man to manpath
+... snip ...
+```
+`manp.c` from [man-db repository](https://gitlab.com/man-db/man-db.git) contains
+```c
+/* The directory we're working on isn't in the config file.
+  See if it has ../man, man, ../share/man, or share/man
+  subdirectories.  If so, and they haven't been added to
+  the list, do. */
+```
+
 #### replace in place with sed
 ```sh
 sed -i -e 's/^/#/' filename
@@ -110,6 +204,14 @@ echo -e "example\nwikipedia" | pz 's += ".com"'
     1. GUI primary "+ and secondary "* , middle click clipboard
     1. GUI drop register "~ (drag and drop)
 
+#### Bash history expansion
+
+Run last command. `man bash` `Event Designators`
+
+```sh
+sudo !!
+```
+
 #### Bash job control
 
 Ctrl+Z to suspend a program in bash. Sends SIGTSTP (Keyboard stop).
@@ -172,6 +274,19 @@ With mail open, match string from the body.
 h :/\\[SPAM\\]
 ```
 
+Display help.
+
+```
+?
+```
+
+List messages (print message headers).
+
+```
+h
+f *
+```
+
 Match string from the header From.
 
 ```
@@ -189,6 +304,18 @@ Delete matching messages.
 
 ```
 d /\\[SPAM\\]
+```
+
+Touch all messages, they'll be acted on as if they were read.
+
+```
+tou *
+```
+
+Quit without removing system mailbox.
+
+```
+x
 ```
 
 #### moreutils
@@ -249,9 +376,9 @@ debian package name fd-find, executable name on debian is
 fdfind
 ```
 ripgrep - alternative to grep.
-debian package name ripgrep.
+Debian package name ripgrep.
 ```sh
-rg
+rg --pcre2 '(?!\\)_'
 ```
 [runiq](https://github.com/whitfin/runiq) filters duplicate lines. Alternative to uniq.
 
@@ -286,6 +413,19 @@ helix, evil-helix - vim
 just, mask - make
 
 ### Extra
+
+#### pandoc to convert between text formats {#pandoc-converter}
+
+General markup coverter, supports lots of formats including epub, html, odt, csv, json.
+
+Markdown to plain text.
+```sh
+pandoc -t plain README.md
+```
+Render markdown as html and view.
+```sh
+pandoc -t html README.md | w3m -T text/html
+```
 
 #### pass
 

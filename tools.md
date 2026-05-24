@@ -228,7 +228,7 @@ ansible localhost -m virt -a "name=vm_name command=status"
 # quick fact overview
 ansible --inventory inventory/ srv-web -m ansible.builtin.setup
 ```
-Loops have the default loop_var `item` but that can be renamed in case of a conflict. `loop_control` has [other uses](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_loops.html#adding-controls-to-loops) and does not affect `until`.
+Loops have the default `loop_var` `item` but that can be renamed in case of a conflict. `loop_control` has [other uses](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_loops.html#adding-controls-to-loops) and does not affect `until`.
 <!-- {% raw %} -->
 ```yaml
 community.digitalocean.digital_ocean:
@@ -362,8 +362,8 @@ docsible --role roles/kvm_provision/ --playbook kvm_provision.yml --no-backup --
 
 #### Secrets
 
-Debug output can also include secret information despite no_log settings being enabled.
-Put the encrypt_string result in a vars file like `vault.yml` containing secrets to see clearly which secrets are which. Add `vault.yml` to `.gitignore`
+Debug output can also include secret information despite `no_log` settings being enabled.
+Put the `encrypt_string` result in a vars file like `vault.yml` containing secrets to see clearly which secrets are which. Add `vault.yml` to `.gitignore`
 
 ```sh
 ansible-vault create secrets_file.enc # no secret name recorded

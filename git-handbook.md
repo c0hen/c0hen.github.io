@@ -215,15 +215,33 @@ git push
 git ls-files --deleted -z | xargs -0 git rm
 ```
 
+#### Sign commit or create signed tag
+
+```sh
+git commit --amend -SpgpKeyID HEAD # no space allowed after -S
+git tag -s -u pgpKeyID v0.0.1 -m'Test sign tag'
+```
+
+#### Verify commit or tag
+
+```sh
+git verify-commit d5f8d4d2a5555b858e67b22d2a6da7f4e32870a9
+git verify-tag v0.0.10
+git tag -v v0.0.10 v0.0.11
+```
+
 ## Branches
 
 ### New feature testing workflow
 
-#### Create a branch (still on master) and switch to it (on new branch).
+#### Create a branch (still on master) and switch to new branch based on master.
 
 ```sh
 git branch social
 git checkout social
+```
+```sh
+git switch -c social
 ```
 
 #### Merge changes from the master branch and run tests
@@ -351,6 +369,7 @@ git push --delete origin my_branch
 
 ```sh
 git ls-remote remotename
+git ls-remote --tags remotename
 ```
 
 #### Add git remote with SSH URL
@@ -416,6 +435,12 @@ git push secondary
 ```
 For further git configuration to allow remote checking via external transport etc, see `man git-config`.
 
+#### Push all branches and add upstream reference
+
+```sh
+git push -u --all
+```
+
 #### Clean up commit history / reinit the repository {#reinit-repository-method}
 
 Deleting the .git folder may cause problems in your git repository. If you want to delete all your commit history but keep the code in its current state, it is very safe to do it as in the following:
@@ -476,11 +501,6 @@ git reset --hard id_of_commit_before_merge
 ```
 1. Success! Clean up, removing the branches. Since `xml_support` has the same content as the merged `xml_support_finalized`, it's safe to ignore warnings about it not being merged.
 
-#### Get a single file from a github hosted repo
-
-```sh
-wget --content-disposition https://github.com/c0hen/c0hen.github.io/blob/master/README.md?raw=true
-```
 ## Worktrees
 
 ```sh
@@ -515,6 +535,16 @@ GIT_CURL_VERBOSE=1
 ```sh
 GIT_MERGE_VERBOSITY=5
 ```
+
+#### Get a single file from a github hosted repo
+
+```sh
+wget --content-disposition https://github.com/c0hen/c0hen.github.io/blob/master/README.md?raw=true
+```
+
+#### View markdown files
+
+[Pandoc](/useful-commands/#pandoc-converter)
 
 ### CLI tools for working with git hosts
 

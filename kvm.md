@@ -185,7 +185,7 @@ ip addr flush dev eth0
 ifup br0
 ```
 
-Contents of my traffic shaping script tc_br0.sh, commented out in the above example interfaces file. Make sure to make it executable if planning to use it.
+Contents of my traffic shaping script `tc_br0.sh`, commented out in the above example interfaces file. Make sure to make it executable if planning to use it.
 Using Fair Queueing Controlled Delay. Some reasoning behind this from the [Arch Linux wiki.](https://wiki.archlinux.org/index.php/advanced_traffic_control)
 ```sh
 #!/bin/sh

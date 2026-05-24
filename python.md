@@ -241,7 +241,7 @@ def printTruth():
 ```python
 print(printTruth.__doc__)
 ```
-An [assert](https://docs.python.org/3/reference/simple_stmts.html#the-assert-statement) statement and any code conditional on the value of __debug__ is removed with `python -O`
+An [assert](https://docs.python.org/3/reference/simple_stmts.html#the-assert-statement) statement and any code conditional on the value of `__debug__` is removed with `python -O`
 ```python
 assert age == 2
 ```

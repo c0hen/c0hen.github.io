@@ -8,15 +8,17 @@ tags: siteinfo
 
 Testing Jekyll and trying to organize my tinkerings.
 
-Installing gems via bundler:
+Install gems via bundler into the project:
 
-```
+```sh
+bundle config set --local path 'github/jekyll'
+bundle config list
 bundle install
 ```
 
 Serve the site locally:
 
-```
+```sh
 bundle exec jekyll serve
 ```
 
