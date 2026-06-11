@@ -215,6 +215,14 @@ cargo update bitstream-io
 cargo test
 ```
 
+#### [Crates.io data access](https://crates.io/data-access)
+
+`cargo search` shows first 100 results.
+```sh
+xh user-agent:contact@example.com https://crates.io/api/openapi.json
+```
+Complete database dump [db-dump.tar.gz](https://static.crates.io/db-dump.tar.gz), updated every 24 hours.
+
 #### [Documentation comments](https://doc.rust-lang.org/rust-by-example/hello/comment.html#documentation-comments-doc-comments-which-are-parsed-into-html-library-documentation)
 
 #### Using [match](https://doc.rust-lang.org/rust-by-example/flow_control/match.html) instead of [if](https://doc.rust-lang.org/rust-by-example/flow_control/if_else.html) makes compiler errors more helpful

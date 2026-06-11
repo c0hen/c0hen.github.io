@@ -427,9 +427,9 @@ Render markdown as html and view.
 pandoc -t html README.md | w3m -T text/html
 ```
 
-#### pass
+#### [pass](/secret/#create-password-store)
 
-Unix style password management script, encrypts with gpg.
+Unix style password management, encrypts with gpg.
 
 #### find and play videos flexibly
 

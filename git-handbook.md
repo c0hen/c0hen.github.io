@@ -435,10 +435,20 @@ git push secondary
 ```
 For further git configuration to allow remote checking via external transport etc, see `man git-config`.
 
-#### Push all branches and add upstream reference
+#### Push all branches and add tracking reference
 
 ```sh
 git push -u --all
+```
+
+#### Add upstream for your fork, merge upstream
+
+```sh
+git remote add upstream https://codeberg.org/Codeberg/Documentation.git
+git remote -v
+git fetch upstream
+git switch main
+git merge upstream/main
 ```
 
 #### Clean up commit history / reinit the repository {#reinit-repository-method}

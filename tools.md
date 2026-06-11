@@ -119,6 +119,7 @@ docker images
 docker history rockylinux/rockylinux:10-ubi-micro
 docker inspect minikube
 docker exec --tty minikube sh -c 'uname -a'
+eval $(aws ecr get-login --no-include-email) | docker login --username foo --password-stdin
 ```
 Run `uv` [using docker](https://docs.astral.sh/uv/guides/integration/docker/)
 ```sh

@@ -8,7 +8,7 @@ tags: password gpg tips otp secret signing encryption gnupg pass
 * Table of contents
 {:toc}
 
-## Create password store
+## Create password store {#create-password-store}
 
 Using [pass](https://git.zx2c4.com/password-store).
 

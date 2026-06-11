@@ -30,7 +30,7 @@ rougify style github > rouge.css
 
 Github.io's Jekyll site rebuilds after a push.
 
-Markdown (*.md) comments:
+Markdown (`*.md`) comments:
 
 ```
 [//]: # (This may be the most platform independent comment)
