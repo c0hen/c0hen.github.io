@@ -146,63 +146,99 @@ echo -e "example\nwikipedia" | pz 's += ".com"'
 
 #### Vim {#vim}
 
+- Get enabled features info.
+```
+:help feature-list
+```
 - Delete empty lines.
- ```sh
- :g/^$/d
- :help :g
- ```
+```
+:g/^$/d
+:help :g
+```
 - Show shell executable.
- ```sh
- :set shell?
- ```
+```
+:set shell?
+```
 - Execute a child shell process. Exiting returns to vi.
- ```sh
- :sh
- ```
+```
+:sh
+```
+- Execute string that results from the evaluation of expression as an Ex command. Insert variable at the beginning of the file.
+```
+:execute append(0, &shiftwidth)
+```
 - Run given shell commands and exit after pressing enter.
- ```sh
- :!printf ":help :!"
- ```
+```
+:!printf ":help :!"
+```
 - Execute current line ('.') in sh and replace it in the vi buffer with the output.
- ```sh
- :.!sh
- ```
+```
+:.!sh
+```
 - Insert the output of the shell command in the buffer.
- ```sh
- :r!date
- ```
+```
+:r!date
+```
 - Get the output of a shell command with system ( :help system ).
- ```sh
- :call system('touch /tmp/$(date +%Y%m%d)')
- ```
- ```sh
- :echo system('ls -lt /tmp/$(date +%Y)* | tail')
- ```
+```
+:call system('touch /tmp/$(date +%Y%m%d)')
+```
+```
+:echo system('ls -lt /tmp/$(date +%Y)* | tail')
+```
 - Start a job that doesn't wait to finish ( :help job\_status ), execute with no shell.
- ```sh
- :call job_start(['/bin/bash', '-c', '{ sleep 60 && printf "DONE"; }'])
- ```
+```
+:call job_start(['/bin/bash', '-c', '{ sleep 60 && printf "DONE"; }'])
+```
 - Registers (+ * ~ / : % . -)
   - c - characterwise text
   - l - linewise text
   - b - blockwise text
-  ```sh
+  ```
   :registers
   "+p # paste in visual mode
   ```
-    1. unnamed register "" fills when using delete or yank
-    1. numbered registers "0-"9 (deletion history stack)
-    1. small delete register "- (one line or less deleted)
-    1. named registers "a-"z"A-"Z (write to F gets appended, f replaced)
+    1. unnamed register `""` fills when using delete or yank
+    1. numbered registers `"0`-`"9` (deletion history stack)
+    1. small delete register `"-` (one line or less deleted)
+    1. named registers `"a`-`"z`,`"A`-`"Z` (write to F gets appended, f replaced)
     1. read only registers:
-        - ": most recently executed command;
-        - "% current file name;
-        - ". last inserted text.
-    1. alternate file name register "# (in case of multiple open files)
-    1. expression register "=
-    1. last search result register "/
-    1. GUI primary "+ and secondary "* , middle click clipboard
-    1. GUI drop register "~ (drag and drop)
+         - `":` most recently executed command;
+         - `"%` current file name;
+         - `".` last inserted text.
+    1. alternate file name register `"#` (in case of multiple open files)
+    1. expression register `"=`
+    1. last search result register `"/`
+    1. GUI primary `"+` and secondary `"*` , middle click clipboard
+    1. GUI drop register `"~` (drag and drop)
+    <br />
+    <br />
+
+- Keyboard combination to insert register content while in insert mode.
+```
+(Ctrl-R)+
+```
+- Redirect output.
+```
+:redir @a
+:set textwidth?
+:redir END
+"ap
+```
+- Read and set registers as variables.
+```
+:let @a = "hello!"
+"ap
+```
+- Options as variables.
+```
+:echo &textwidth
+```
+- Set diff algorithm
+```
+:help diffopt
+:set diffopt+=algorithm:patience
+```
 
 #### Bash history expansion
 
@@ -243,6 +279,25 @@ Format text in a way that is safe to use as shell input.
 printf '%q\n' "It's magic!"
 ```
 
+#### Check if process is running, wait for response
+
+`pgrep` full process path, run web server if not running, wait until port responds.
+```sh
+if ! pgrep --full jekyll >/dev/null ; then
+  bundle exec jekyll serve >/dev/null &
+fi
+
+while ! nc -z localhost 4000; do
+  sleep 0.1
+done
+```
+
+#### Wait for changes to files
+
+```sh
+inotifywait --quiet --event close_write /tmp/
+```
+
 #### grep
 
 Search directory recursively for lines starting 0 or more whitespace and $.
@@ -251,6 +306,7 @@ grep -ER '^(\w*)\$'
 ```
 
 #### find delete empty directories
+
 Starts from the deepest, deletes recursively up.
 ```sh
 find . -depth -type d -empty -delete
@@ -343,11 +399,19 @@ x
 - tomlq
 - rq (see: open policy agent, Rego, kube-mgmt)
 
+#### url encode
+
+```sh
+printf https://example.com | jq -Rr @uri # --raw-input, --raw-output (treat as strings)
+```
+
 #### [linkchecker](https://github.com/wummel/linkchecker)
 
-Check HTML documents and websites for broken links. Return value is 1 when
-- invalid links were found or
-- link warnings were found and warnings are enabled
+Check HTML documents and websites for broken links.
+
+```
+linkchecker --check-extern --ignore-url crates.io http://localhost:4000
+```
 Supports clamav integration.
 
 #### ncdu equivalent

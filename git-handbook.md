@@ -59,6 +59,11 @@ git checkout try_push
 cd /tmp/myrepo
 git push crucial master
 ```
+Alternative to allow updating the master branch in `backup_repo` is to use this configuration.
+```sh
+cd /media/backup/git/myrepo/
+git config --local receive.denyCurrentBranch updateInstead
+```
 
 ### [Terms](https://git-scm.com/docs/gitglossary)
 
@@ -357,10 +362,35 @@ while read branch; do
 done < <(git for-each-ref --format='%(refname:short)' refs/heads/*)
 ```
 
+#### Push all matching branches to remote
+
+Matching branches have the same name on both ends.
+
+```sh
+git push origin :
+```
+
 #### Delete a remote branch
 
 ```sh
 git push --delete origin my_branch
+git push origin :my_branch
+```
+
+#### Push to all remotes
+
+Push current branch to all remotes, git alias.
+```sh
+git remote | xargs -I R git push R # -L1 for mac xargs
+git config --global alias.pushthis '!git remote | xargs -I R git push R'
+git pushthis
+```
+
+Push all branches to all remotes, git alias.
+
+```sh
+git config --global alias.pushall '!git remote | xargs -L1 git push --all'
+git pushall
 ```
 
 ### Working with remote repositories
@@ -526,6 +556,31 @@ git rev-parse --verify HEAD
 To access refs, it’s best not to look inside `$GIT_DIR` directly. Instead use commands such as `git-rev-parse` or `git-update-ref` which will handle refs correctly.
 
 By default, the repository config file is shared across all worktrees.
+
+### Bare repository
+
+A bare repository does not contain a worktree or any files checked out. It consists of the content normally in the `.git/` directory. No remote tracking branches are created.
+
+This type of repository is used for sharing, contributors pushing to it after making local changes. It also saves disk space in hosting. By convention, directory name for bare repos is suffixed with `.git`.
+
+```sh
+git init --bare /tmp/my_bare_repo.git
+git clone --bare /media/git/my_upstream /tmp/upstream_bare
+```
+
+A user could run a Git command inside the bare repository thinking that the config file of the 'outer' repository would be used, but in reality, the bare repository's config file (which is attacker-controlled) is used. The hooks can be used to execute arbitrary code. To prevent that, see `man git config` `safe.bareRepository`.
+
+```
+# ~/.config/git/config
+[safe]
+bareRepository=explicit
+```
+
+This is a way to run a git command that works on a bare repository without explicitly specifying `$GIT_DIR` when `safe.bareRepository=explicit` is set in configuration. It is safe because git does not allow nested `.git` directories.
+
+```sh
+cd .git && git cmd
+```
 
 ## Debugging and helper tools
 

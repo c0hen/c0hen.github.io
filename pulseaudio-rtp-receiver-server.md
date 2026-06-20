@@ -150,7 +150,7 @@ pulse-access:x:114:radiouser
 
 ### Client side:
 
-Configure a source to broadcast with [Paprefs](https://freedesktop.org/software/pulseaudio/paprefs/#documentation). Make sure you have the correct IP for your machine if you used that or configure [cookie authentication](https://wiki.archlinux.org/index.php/PulseAudio/Configuration#Connection_.26_authentication).
+Configure a source to broadcast with [Paprefs](https://freedesktop.org/software/pulseaudio/paprefs). Make sure you have the correct IP for your machine if you used that or configure [cookie authentication](https://wiki.archlinux.org/index.php/PulseAudio/Configuration#Connection_.26_authentication).
 
 Other programs that broadcast RTP can be used, YMMV.
 

@@ -5,6 +5,18 @@ description: Python-venv usage to install applications with all dependencies and
 tags: python beginner tips programming system distribution
 ---
 
+## Debug with the [python debugger](https://docs.python.org/3/library/pdb.html)
+
+In code
+```python
+breakpoint()
+```
+
+Command line interface
+```sh
+python -m pdb --help
+```
+
 ## Recover a broken python installation (errors like: pycompile not found)
 
 Might need to reinstall only python-minimal, reinstall other packages as needed.
@@ -12,6 +24,34 @@ Might need to reinstall only python-minimal, reinstall other packages as needed.
 ```
 apt-get install --reinstall python python-minimal python-setuptools
 ```
+
+## Guard scripts against accidental invocation
+
+Option to protect against accidental invocation on import of a file. Better to write clean modules to import but this way is common in python.
+
+```python
+#!/usr/bin/env python
+
+def is_tool(name):
+  """Check if `name` is on PATH and is executable."""
+  from shutil import which
+  return which(name) is not None
+
+if __name__ == '__main__':
+  """Main code protected from accidental invocation."""
+  tool = "ping"
+  if is_tool(tool):
+    print("We have ping")
+```
+
+A script imported without this `if __name__ == '__main__':` guard block will be triggered by the importing script:
+
+- to run at import time
+- using the importing script's command line arguments.
+
+This is almost always a mistake.
+
+If there is a custom class in the guardless script and it is saved to a pickle file, then unpickling it in another script will trigger an import of the guardless script, with the same problems.
 
 ## Debian: use alternatives to set python version
 

@@ -4,7 +4,9 @@ title: Pitfalls
 description: Pitfalls in coding, os base tools
 tags: pitfall gotcha coding os
 ---
-## Process spawning code pitfall, copied from [rachelbythebay](https://rachelbythebay.com/w/2014/08/19/fork/)
+## Process spawning code pitfall
+
+The original source, [rachelbythebay](https://rachelbythebay.com/w/2014/08/19/fork/), seems to be gone.
 
 fork() can fail: this is important
 
