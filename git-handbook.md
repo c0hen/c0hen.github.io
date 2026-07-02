@@ -559,7 +559,7 @@ By default, the repository config file is shared across all worktrees.
 
 ### Bare repository
 
-A bare repository does not contain a worktree or any files checked out. It consists of the content normally in the `.git/` directory. No remote tracking branches are created.
+A bare repository does not contain a worktree or any files checked out. It consists of the content normally in the `.git/` directory, `$GITDIR` is the repository. No remote tracking branches are created.
 
 This type of repository is used for sharing, contributors pushing to it after making local changes. It also saves disk space in hosting. By convention, directory name for bare repos is suffixed with `.git`.
 
@@ -580,6 +580,20 @@ This is a way to run a git command that works on a bare repository without expli
 
 ```sh
 cd .git && git cmd
+```
+
+## Git directory structure, hooks, automation
+
+Hooks reside in `$GITDIR/hooks`.
+
+### Working with hooks
+
+Files in the hooks directory must be executable to run.
+
+#### Skip hooks
+
+```sh
+git push --no-verify
 ```
 
 ## Debugging and helper tools

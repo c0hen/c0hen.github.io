@@ -122,7 +122,7 @@ sed -i '1s/^/added line before 1st line of file\n/' filename
 ```
 Empty files don't have that first line and are not affected.
 
-#### Find, grep, sed find files with pattern and replace
+#### Find, grep, sed find files matching pattern and replace
 
 ```sh
 find group_vars/ -type f -name '*.yml' ! -exec grep -q -- '---' '{}' \; -print
@@ -131,6 +131,17 @@ find group_vars/ -type f -name '*.yml' \
 ! -exec grep -q -- '---' '{}' ';' \
 -exec sed -i '1s/^/---\n/' '{}' '+'
 ```
+
+#### Ripgrep print files matching pattern
+
+Follow path matches with `NUL` byte, search compressed files.
+<!-- {% raw %} -->
+```sh
+rg --files-with-matches --null --search-zip '"{0,2}\${1}\{{0,1}*usedVariable' --glob='*sh$'
+rg -l0z '"{0,2}\${1}\{{0,1}*usedVariable' -g '*sh$'
+```
+<!-- {% endraw %} -->
+
 #### -u to turn off buffering for sed
 
 ```sh

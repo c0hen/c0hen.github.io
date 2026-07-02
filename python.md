@@ -2,7 +2,7 @@
 layout: default
 title: Python tips
 description: Python-venv usage to install applications with all dependencies and assorted tips
-tags: python beginner tips programming system distribution
+tags: python beginner tips programming system distribution packaging dependencies uv build
 ---
 
 ## Debug with the [python debugger](https://docs.python.org/3/library/pdb.html)
@@ -194,6 +194,15 @@ And tell pip too install all of the packages in this file using the -r flag:
 python3 -m pip install -r requirements.txt
 ```
 
+#### Constraints files
+
+Constraints files are in the format of requirements. They control which version of a package can be installed but provide no control over the actual installation. For example, a production environment can have hardened versions of packages specified via constraints.
+
+```sh
+python -m pip -c constraints.txt
+PIP_CONSTRAINTS='https://example.com/constraints.txt' python -m pip
+```
+
 ### Freezing dependencies
 
 Pip can export a list of all installed packages and their versions using the freeze command:
@@ -310,4 +319,149 @@ a = [
 result.append(s)
 result.extend(a)
 print(result)
+```
+
+## Creating packages
+
+Old package format used by setuptools was egg. Left from that era is the directory name suffix `.egg-info`.
+```bash
+example_project.egg-info/
+├── dependency_links.txt
+├── entry_points.txt
+├── PKG-INFO
+├── requires.txt
+├── SOURCES.txt
+└── top_level.txt
+```
+Current package format is wheel `.whl`.
+
+### Package structure
+
+Modern packages are [declared in](https://packaging.python.org/en/latest/specifications/pyproject-toml/#pyproject-toml-spec) `pyproject.toml`. This allows selecting a build system and replaces `setup.py`.
+
+Historical `setuptools` convention dictated using `__init__.py` to mark a python package. There were 3 schools of thought.
+
+1. Leave the `__init__.py` blank. This enforces explicit imports and thus clear namespaces.
+1. Import all modules in __init__.py. The user does not have to do multiple imports but no API stability.
+1. Import key functions from various modules directly into the package namespace. If modules are restructured, API can be kept the same for end users.
+
+Minimal `setup.py` that can be used with `pyproject.toml` for compatibility.
+```
+import setuptools
+
+setuptools.setup()
+```
+
+Sample repository structure using `uv`.
+
+```bash
+├── docs
+│   └── sample.md
+├── LICENSE
+├── pyproject.toml
+├── .python-version
+├── README.md
+├── requirements.txt
+├── src
+│   └── sample
+│       ├── __init__.py
+│       ├── sample.py
+│       └── helpers.py
+├── tests
+│   └── test.py
+└── uv.lock
+```
+
+### Automatic documentation from docstrings using [pdoc](https://pdoc.dev/docs/pdoc.html)
+
+Supports Jinja2 templates to customize output. Main use case for pdoc is API documentation, more complex needs are better served by Sphinx.
+
+```sh
+pdoc --help
+pdoc ./demo.py -o ./docs
+```
+
+Variables are not assigned the `__doc__` attribute by python. `pdoc` will read the abstract syntax tree (an abstract representation of the source code) and include all assignment statements immediately followed by a docstring.
+
+The public interface (API) of a module is determined through one of two ways.
+
+- If `__all__` is defined in the module, then all identifiers in that list will be considered public. No other identifiers will be considered public.
+- If `__all__` is not defined, then pdoc will consider all items public that do not start with an underscore and that are defined in the current module (i.e. they are not imported).
+
+If you want to override the default behavior for a particular item, you can do so by including an annotation in its docstring:
+
+- `@private` hides an item unconditionally.
+- `@public` shows an item unconditionally.
+
+#### Sphinx autodoc
+
+Pdoc is meant to be compatible with the autodoc extension for Sphinx.
+
+```
+# docs/conf.py
+extensions = [
+  ...
+  'sphinx.ext.autodoc',
+  'myst_parser', # markdown support for sphinx
+]
+
+```
+[Info fields](https://www.sphinx-doc.org/en/master/usage/domains/python.html#info-field-lists) can be added to docstrings for Sphinx.
+```python
+def my_function(*args):
+  """Example function
+
+  :meta private:
+  """
+```
+
+### [uv to manage project](https://docs.astral.sh/uv/guides/) instead of venv and pip
+
+```sh
+uv init hello
+uv version --bump patch --bump dev --dry-run
+uv lock --upgrade-package requests
+uv help venv
+uv build
+```
+
+Initialize a package, moves code to `src/` directory and defines a build system.
+```sh
+uv init --package hello
+```
+
+#### Python script that will create its environment with uv
+
+Inline script metadata according to PEP 723.
+
+```
+#!/usr/bin/env -S uv run
+# /// script
+# requires-python = ">=3.13"
+# dependencies = [
+#     "biopython",
+# ]
+# ///
+```
+
+#### Work interchangeably with pip in other parts of the pipeline.
+
+```sh
+uv export --no-hashes --format requirements-txt --output-file requirements.txt
+uv add -r requirements.txt
+```
+
+#### Create executable scripts in the package
+
+Same process as in [python packaging guide](https://packaging.python.org/en/latest/guides/writing-pyproject-toml), using an entry point to create `spam-cli`.
+```
+# pyproject.toml
+[project.scripts]
+spam-cli = "spam:main_cli"
+```
+effectively does
+```python
+import sys
+from spam import main_cli
+sys.exit(main_cli())
 ```
