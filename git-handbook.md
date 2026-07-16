@@ -309,6 +309,10 @@ git stash show
 git stash pop stash@{0}
 git commit -m'Fix includes'
 ```
+Examine stash creation times (not shown by default). `man git log` to see info on log options like `--date`.
+```sh
+git stash list --date=iso
+```
 Keep the stashes and apply (copy) the target stash:
 ```sh
 git checkout main

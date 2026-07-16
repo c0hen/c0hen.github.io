@@ -166,6 +166,46 @@ echo -e "example\nwikipedia" | pz 's += ".com"'
 :g/^$/d
 :help :g
 ```
+- Record and run macro.
+Start recording macro `a`
+```
+qa
+```
+Do what you want the macro content to be. Stop recording macro.
+```
+q
+```
+Run macro `a`.
+```
+@a
+```
+Rerun last run macro.
+```
+@@
+```
+- Switch case up to motion (append motion like `w`, word).
+```
+g~
+```
+- Selection to upper-, lower case.
+```
+U
+u
+```
+- Make the cursor position the top, center, bottom on the screen.
+```
+zt
+zz
+zb
+```
+- Move cursor to matching character, `:help matchpairs`.
+```
+%
+```
+- Visual block selection mode, easy to remember for comments and indenting. Use any operation on selection.
+```
+Ctrl+v
+```
 - Show shell executable.
 ```
 :set shell?
@@ -201,7 +241,7 @@ echo -e "example\nwikipedia" | pz 's += ".com"'
 ```
 :call job_start(['/bin/bash', '-c', '{ sleep 60 && printf "DONE"; }'])
 ```
-- Registers (+ * ~ / : % . -)
+- Registers (+ * ~ / : % . -) are being stored in `~/.viminfo` and will be loaded again on next start of vim.
   - c - characterwise text
   - l - linewise text
   - b - blockwise text
