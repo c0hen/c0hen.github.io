@@ -600,7 +600,19 @@ Files in the hooks directory must be executable to run.
 git push --no-verify
 ```
 
+#### Check cached changes, pre-commit
+
+Good for a simple pre-commit check (`.git/hooks/pre-commit.sample`). Looks for conflicting merge markers or whitespace errors.
+```sh
+git diff-index --check --cached HEAD
+```
+
 ## Debugging and helper tools
+
+### Web interface, HTTPS access to repos
+
+- [cgit](https://git.zx2c4.com/cgit/about/)
+- [forgejo](https://codeberg.org/forgejo/forgejo)
 
 ### git environment variables and debugging
 

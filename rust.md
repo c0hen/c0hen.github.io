@@ -140,6 +140,15 @@ cargo install --list
 
 Show package information with [cargo info](https://doc.rust-lang.org/stable/cargo/commands/cargo-info.html)
 
+#### Compile and install with specific features.
+
+For example, enable buildtime binding generation for `libsqlite3-sys`. Generates the Rust declarations from SQLite's C header file instead of using pregenerated bindings.
+
+```sh
+cargo info libsqlite3-sys
+cargo install --features buildtime_bindgen libsqlite3-sys@0.38.2
+```
+
 ## Fearless Rust
 
 Write the dumbest version first, optimise later (for multithreading - tokio, performance, optimal structures, cache etc). Clone data, don't bother with a reference (ignore lifetime issues). Waste RAM to get it working, worry later. Improvements are easy once you got it to compile the first time. Small changes easier.

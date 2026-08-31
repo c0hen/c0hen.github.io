@@ -164,6 +164,11 @@ services:
     restart: always
 ```
 
+Disable (stop and remove) all docker services and networks.
+```sh
+docker compose down
+```
+
 Disable docker service.
 ```sh
 docker compose down frontendService

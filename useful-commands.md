@@ -119,6 +119,7 @@ path directory /home/user/.local/bin is not in the config file
 ```sh
 sed -i -e 's/^/#/' filename
 sed -i '1s/^/added line before 1st line of file\n/' filename
+sed -i 's/[ \t]*$//' filename # remove trailing whitespace, space and tab
 ```
 Empty files don't have that first line and are not affected.
 
@@ -131,6 +132,8 @@ find group_vars/ -type f -name '*.yml' \
 ! -exec grep -q -- '---' '{}' ';' \
 -exec sed -i '1s/^/---\n/' '{}' '+'
 ```
+
+`xzgrep`, `zgrep` and `bzgrep` can be used to search compressed files.
 
 #### Ripgrep print files matching pattern
 

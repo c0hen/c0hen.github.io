@@ -5,6 +5,22 @@ description: Tips on hardware troubleshooting.
 tags: system hardware debug troubleshooting configuration tuning
 ---
 
+## Linux kernel
+
+### List Linux module parameters
+
+From `sysfs-tools`.
+```sh
+systool -vm amdgpu
+```
+
+### Configure Linux module parameters
+
+1. `/etc/modprobe.d/amdgpu.conf`
+1. Append to boot loader configuration line that boots the kernel.
+  - `ESP/loader/entries/*.conf` for systemd-boot, `man loader.conf`
+  - `/etc/default/grub` for grub, `less /etc/grub.d/README`, `info grub-mkconfig`
+
 ## Firmware and UEFI related
 
 ### SSD firmware update using systemd-boot
