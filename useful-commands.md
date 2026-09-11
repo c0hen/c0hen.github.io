@@ -620,3 +620,10 @@ systemctl show --property ActiveState nginx.service
 ```sh
 ecode=$(systemctl is-failed --quiet nginx.service)
 ```
+
+#### Systemd timer, time specifications
+
+Analyze
+```
+systemd-analyze calendar '*-*-* *:*:00'
+```

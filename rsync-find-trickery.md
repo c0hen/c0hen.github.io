@@ -5,6 +5,9 @@ description: Tips on how to use rsync and find via cron to automate.
 tags: rsync find cron filesystems server lvm tips
 ---
 
+* Table of contents
+{:toc}
+
 ### School: file and surveillance video server
 
 ```sh

@@ -4,6 +4,10 @@ title: Pitfalls
 description: Pitfalls in coding, os base tools
 tags: pitfall gotcha coding os
 ---
+
+* Table of contents
+{:toc}
+
 ## Process spawning code pitfall
 
 The original source, [rachelbythebay](https://rachelbythebay.com/w/2014/08/19/fork/), seems to be gone.

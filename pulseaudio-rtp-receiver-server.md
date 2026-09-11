@@ -5,6 +5,9 @@ description: Configure a headless Pulseaudio server that accepts connections via
 tags: pulseaudio rtp systemd audio server
 ---
 
+* Table of contents
+{:toc}
+
 ## Based on Debian Stretch 9.2 20171016
 
 ### Server starts all functions at boot, no X needed

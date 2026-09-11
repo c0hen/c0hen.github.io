@@ -5,6 +5,9 @@ description: Go tips
 tags: go golang coding
 ---
 
+* Table of contents
+{:toc}
+
 ## Go intro
 
 [Module](https://go.dev/ref/mod#modules-overview) based usage is assumed. A module is like a python virtualenv.

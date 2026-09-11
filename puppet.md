@@ -5,6 +5,9 @@ description: Useful for a puppet cluster
 tags: puppet modules devops coding
 ---
 
+* Table of contents
+{:toc}
+
 ## Best practices
 
 1. Separate configs to [hiera](https://www.puppet.com/docs/puppet/7/hiera.html)

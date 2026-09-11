@@ -5,6 +5,9 @@ description: Rust tips
 tags: rust cargo coding development asynchronous publishing apps threads io-bound types macros
 ---
 
+* Table of contents
+{:toc}
+
 ## Rust basics
 
 Rust toolchain is tightly integrated with documentation and development with `cargo`.

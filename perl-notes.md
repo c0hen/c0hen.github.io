@@ -5,6 +5,9 @@ description: Some caveats in Perl system scripting.
 tags: perl beginner tips programming system
 ---
 
+* Table of contents
+{:toc}
+
 ## Executing system commands synchronously
 
 ### Things to remember

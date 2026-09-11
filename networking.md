@@ -5,6 +5,9 @@ description: Networking cheatsheet
 tags: iptables network tips system gotchas libvirt kvm
 ---
 
+* Table of contents
+{:toc}
+
 ### Commands to get a quick networking overview
 
 ```sh

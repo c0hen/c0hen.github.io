@@ -5,6 +5,9 @@ description: Python-venv usage to install applications with all dependencies and
 tags: python beginner tips programming system distribution packaging dependencies uv build
 ---
 
+* Table of contents
+{:toc}
+
 ## Debug with the [python debugger](https://docs.python.org/3/library/pdb.html)
 
 In code

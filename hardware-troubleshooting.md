@@ -5,6 +5,109 @@ description: Tips on hardware troubleshooting.
 tags: system hardware debug troubleshooting configuration tuning
 ---
 
+* Table of contents
+{:toc}
+
+## Linux system information
+
+### `/proc` file system
+
+CPU information.
+```sh
+cat /proc/cpuinfo
+```
+System statistics.
+```sh
+cat /proc/stat
+```
+Virtual memory statistics - processes, paging, disks etc.
+```sh
+cat /proc/vmstat
+```
+Memory quantities.
+```sh
+cat /proc/meminfo
+```
+Network, ARP (Address Resolution Protocol) cache.
+```sh
+cat /proc/net/stat/arp_cache
+```
+
+### dmidecode
+
+Show memory info.
+```sh
+dmidecode -t memory
+```
+
+### lsblk
+
+Show disk info.
+```sh
+lsblk
+```
+NVME devices only.
+```sh
+lsblk --nvme
+```
+
+### lspci
+
+Get link speed of all PCI devices.
+```sh
+lspci -vv | grep -E 'PCI bridge|LnkCap'
+```
+Get GPU info.
+```sh
+lspci  -v -s  $(lspci | grep ' VGA ' | cut -d" " -f 1)
+```
+Show vendor and device ID as numbers.
+```sh
+lspci -nn
+```
+Show show subsystem ID as numbers.
+```sh
+lspci -vn
+```
+Show drivers used by device with ID.
+```sh
+lspci -nnk -d 1002:5555
+```
+Tree view.
+```sh
+lspci -tv
+```
+
+### lsusb
+
+USB device info.
+```sh
+lsusb
+```
+Get mouse polling rate. Shows update interval in milliseconds. 8 ms = 125 Hz, 1 ms = 1000 Hz.
+```sh
+lsusb -vd 3057:0000 | grep bInterval
+```
+Tree view.
+```sh
+lsusb -tv
+```
+
+## Linux hardware monitoring and configuration
+
+### `/sys` file system
+
+Allows for monitoring and settings as described by drivers.
+
+[Amdgpu](https://docs.kernel.org/gpu/amdgpu/thermal.html) hwmon interface.
+
+```
+# card0 may change
+/sys/class/drm/card0/device/hwmon/hwmon1/
+# guaranteed same bus interface address path, example to show format
+/sys/devices/pci0000:00/0000:00:00.1/0000:00:00.0/0000:00:00.0/0000:00:00.0/hwmon/hwmon1/
+```
+
 ## Linux kernel
 
 ### List Linux module parameters
@@ -16,7 +119,7 @@ systool -vm amdgpu
 
 ### Configure Linux module parameters
 
-1. `/etc/modprobe.d/amdgpu.conf`
+1. `/etc/modprobe.d/amdgpu.conf` , followed by updating the initramfs for kernels `update-initramfs -uk all`
 1. Append to boot loader configuration line that boots the kernel.
   - `ESP/loader/entries/*.conf` for systemd-boot, `man loader.conf`
   - `/etc/default/grub` for grub, `less /etc/grub.d/README`, `info grub-mkconfig`
