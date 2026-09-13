@@ -81,6 +81,38 @@ front:CARD=Generic,DEV=0
 - `pw-top` for audio processes
 - `pactl list sinks` for pulseaudio sinks
 
+### Linux audio alsa debugging and naming a card
+
+List cards.
+
+```sh
+amixer
+aplay -L
+```
+
+Card indexes are not persistent with udev.
+
+Find the persistent path of the card by its index, in `/sys`.
+```sh
+find /sys -name card0 | grep sound | grep pci
+```
+
+Add a persistent name to the card. Udev path starts after `/sys`.
+```
+#/etc/udev/rules.d/80-pci-hdaudio-name.rules
+SUBSYSTEM!="sound", GOTO="pci_audio_name_end"
+ACTION!="add", GOTO="pci_audio_name_end"
+
+DEVPATH=="/devices/pci0000:00/0000:00:09.1/0000:0b:00.4/sound/card?", ATTR{id}="hdarealtek"
+
+LABEL="pci_audio_name_end"
+```
+
+Use the added name / id to address the card.
+```
+amixer -c hdarealtek sget 'Auto-Mute Mode'
+```
+
 ### Pipewire audio crackling, fine tuning
 
 The most important step to solve crackling seems to be disabling audio device suspend.
