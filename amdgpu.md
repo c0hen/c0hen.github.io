@@ -25,6 +25,8 @@ This is a prequisite for automatic management and `fan1_target`.
 echo 1 > /sys/class/drm/card0/device/hwmon/hwmon1/fan1_enable
 ```
 
+Many of the `_enable` options disengage / override other options, check kernel logs for messages referring to such events (`journalctl -k` or `dmesg`).
+
 Systemd service to set amdgpu /sys options.
 
 ```
