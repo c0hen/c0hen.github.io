@@ -2,7 +2,7 @@
 layout: default
 title: Amdgpu
 description: Amdgpu kernel driver, prevent overheat for older cards
-tags: system hardware debug troubleshooting configuration tuning usb gpu vga frequency gaming
+tags: system hardware debug troubleshooting configuration tuning usb gpu vga frequency gaming temperature
 ---
 
 * Table of contents
@@ -57,6 +57,8 @@ ExecStart=/home/user/bin/amdgpu-settings.sh
 [Install]
 WantedBy=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
 ```
+
+Get sensor info with [`sensors`](/hardware-troubleshooting/#hardware-sensors).
 
 ## Dynamic Power Management
 
