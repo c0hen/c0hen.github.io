@@ -148,6 +148,7 @@ docker run --rm -v $(PWD):/data derlin/docker-compose-viz-mermaid /data/docker-c
 ```sh
 docker-compose help
 docker compose help
+docker compose up --help
 ```
 
 Create [configuration](https://docs.docker.com/reference/compose-file/) `compose.yaml` in project, run as daemon.
@@ -167,6 +168,11 @@ services:
 Disable (stop and remove) all docker services and networks.
 ```sh
 docker compose down
+```
+
+Disable (stop and remove) all docker services, networks, (data) volumes and images.
+```sh
+docker compose down --volumes --rmi=all
 ```
 
 Disable docker service.
