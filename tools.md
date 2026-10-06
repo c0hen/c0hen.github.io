@@ -126,6 +126,24 @@ Run `uv` [using docker](https://docs.astral.sh/uv/guides/integration/docker/)
 docker run --rm -it ghcr.io/astral-sh/uv:debian uv --help
 ```
 
+#### Docker testing flow
+
+1. Create `Dockerfile`.
+```
+FROM debian:trixie-slim
+RUN apt-get update
+RUN apt-get install man-db jq curl -y
+CMD ["/bin/bash"]
+```
+1. Build image named debian-test, version latest, `Dockerfile` in current directory `.`.
+```sh
+docker build --tag debian-test:latest .
+```
+1. Run interactive terminal for testing, container removed after exit (ephemeral).
+```sh
+docker run -it --rm debian-test:latest
+```
+
 #### Docker CLI comparable tools
 
 Also compatible with `docker-compose`
