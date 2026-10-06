@@ -397,6 +397,12 @@ git config --global alias.pushall '!git remote | xargs -L1 git push --all'
 git pushall
 ```
 
+Origin is always mentioned in the output of `git remote`. To exclude origin in case it does not exist, replace the `git remote` call with the following.
+
+```sh
+git remote -v | grep --word-regexp '(push)' | cut -f1
+```
+
 ### Working with remote repositories
 
 #### Check remote repository before fetching it
