@@ -125,6 +125,10 @@ Run `uv` [using docker](https://docs.astral.sh/uv/guides/integration/docker/)
 ```sh
 docker run --rm -it ghcr.io/astral-sh/uv:debian uv --help
 ```
+View a list of all containers, including those that are stopped, their last run commands and total file sizes.
+```sh
+docker ps --all --size
+```
 
 #### Docker testing flow
 
