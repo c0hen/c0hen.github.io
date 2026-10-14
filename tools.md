@@ -125,6 +125,28 @@ Run `uv` [using docker](https://docs.astral.sh/uv/guides/integration/docker/)
 ```sh
 docker run --rm -it ghcr.io/astral-sh/uv:debian uv --help
 ```
+View a list of all containers, including those that are stopped, their last run commands and total file sizes.
+```sh
+docker ps --all --size
+```
+
+#### Docker testing flow
+
+1. Create `Dockerfile`.
+```
+FROM debian:trixie-slim
+RUN apt-get update
+RUN apt-get install man-db jq curl -y
+CMD ["/bin/bash"]
+```
+1. Build image named debian-test, version latest, `Dockerfile` in current directory `.`.
+```sh
+docker build --tag debian-test:latest .
+```
+1. Run interactive terminal for testing, container removed after exit (ephemeral).
+```sh
+docker run -it --rm debian-test:latest
+```
 
 #### Docker CLI comparable tools
 
@@ -148,6 +170,7 @@ docker run --rm -v $(PWD):/data derlin/docker-compose-viz-mermaid /data/docker-c
 ```sh
 docker-compose help
 docker compose help
+docker compose up --help
 ```
 
 Create [configuration](https://docs.docker.com/reference/compose-file/) `compose.yaml` in project, run as daemon.
@@ -167,6 +190,11 @@ services:
 Disable (stop and remove) all docker services and networks.
 ```sh
 docker compose down
+```
+
+Disable (stop and remove) all docker services, networks, (data) volumes and images.
+```sh
+docker compose down --volumes --rmi=all
 ```
 
 Disable docker service.

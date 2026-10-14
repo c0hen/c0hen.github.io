@@ -2,7 +2,7 @@
 layout: default
 title: Amdgpu
 description: Amdgpu kernel driver, prevent overheat for older cards
-tags: system hardware debug troubleshooting configuration tuning usb gpu vga frequency gaming
+tags: system hardware debug troubleshooting configuration tuning usb gpu vga frequency gaming temperature
 ---
 
 * Table of contents
@@ -24,6 +24,8 @@ This is a prequisite for automatic management and `fan1_target`.
 ```
 echo 1 > /sys/class/drm/card0/device/hwmon/hwmon1/fan1_enable
 ```
+
+Many of the `_enable` options disengage / override other options, check kernel logs for messages referring to such events (`journalctl -k` or `dmesg`).
 
 Systemd service to set amdgpu /sys options.
 
@@ -55,6 +57,8 @@ ExecStart=/home/user/bin/amdgpu-settings.sh
 [Install]
 WantedBy=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
 ```
+
+Get sensor info with [`sensors`](/hardware-troubleshooting/#hardware-sensors).
 
 ## Dynamic Power Management
 

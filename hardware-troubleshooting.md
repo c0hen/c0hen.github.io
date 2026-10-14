@@ -2,13 +2,17 @@
 layout: default
 title: Hardware
 description: Tips on hardware troubleshooting.
-tags: system hardware debug troubleshooting configuration tuning pci usb memory disk gpu vga slot frequency link speed
+tags: system hardware debug troubleshooting configuration tuning pci usb memory disk gpu vga slot frequency link speed temperature
 ---
 
 * Table of contents
 {:toc}
 
 ## Linux system information
+
+### Hardware sensors
+
+Get sensor info like CPU, GPU, disk temperatures and fan speed with `sensors` (from [lm-sensors](https://github.com/lm-sensors/lm-sensors), also package name on Debian).
 
 ### `/proc` file system
 
