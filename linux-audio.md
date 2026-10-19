@@ -166,3 +166,7 @@ PULSE_LATENCY_MSEC=83 PIPEWIRE_LATENCY=1024/48000 <COMMAND>
 #!bin/sh
 PULSE_LATENCY_MSEC=83 PIPEWIRE_LATENCY=1024/48000 "$@"
 ```
+
+### Audio from a Windows virtual machine
+
+Scream, [virtual network sound card](https://github.com/duncanthrax/scream) for Microsoft Windows. Removes crackling and other problems that may crop up using default drivers in a KVM virtual machine.
