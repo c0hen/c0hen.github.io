@@ -19,8 +19,36 @@ Disable jack detection in alsamixer by Auto-Mute: disabled
 In case auto mute does not remain disabled after a reboot:
 
 - `/usr/bin/amixer -c 0 sset "Auto-Mute Mode" Disabled`
-
 - `hda-verb` from alsa-tools.
+
+#### Create a systemd service to automatically mute named audio device
+
+Create a named card to target because cards change their index on boot.
+```
+#/etc/udev/rules.d/80-pci-hdaudio-name.rules
+SUBSYSTEM!="sound", GOTO="pci_audio_name_end"
+ACTION!="add", GOTO="pci_audio_name_end"
+
+DEVPATH=="/devices/pci0000:00/0000:00:0x.x/0000:xx:00.x/sound/card?", ATTR{id}="hdarealtek"
+
+LABEL="pci_audio_name_end"
+```
+```sh
+#!/bin/sh
+# audio-automute-disable.sh
+amixer -c hdarealtek sset 'Auto-Mute Mode' Disabled
+```
+```
+# $HOME/.config/systemd/user/audio-alsa-automute-disable.service
+[Unit]
+Description=Disable audio alsa auto-mute on headphone detection
+After=graphical.target
+[Service]
+Type=oneshot
+ExecStart=/home/user1/bin/audio-automute-disable.sh
+[Install]
+WantedBy=graphical.target
+```
 
 #### To retask a jack, for example front jacks for extra surround channels:
 - install alsa-tools-gui
